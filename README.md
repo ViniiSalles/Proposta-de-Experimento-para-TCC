@@ -7,14 +7,19 @@
 
 Análise Comparativa de Performance e Acurácia: Anotadores Genômicos Web-based versus Desktop em Genomas Bacterianos
 
+---
+
 ### 1.2 ID / código
 
 EXP-TCC-ANNOT-2024-001
+
+---
 
 ### 1.3 Versão do documento e histórico de revisão
 
 - **v1.0** (21/11/2024): Criação inicial do documento com identificação básica e contexto
 
+---
     
 ### 1.4 Datas (criação, última atualização)
 
@@ -22,6 +27,7 @@ EXP-TCC-ANNOT-2024-001
     
 - **Última atualização:** 21/11/2024
     
+---
 
 ### 1.5 Autores (nome, área, contato)
 
@@ -29,10 +35,13 @@ EXP-TCC-ANNOT-2024-001
     
 - **Orientador:** Prof. Danilo de Quadros Maia Filho - Departamento de Engenharia de Software - [1514571@sga.pucminas.br](mailto:1514571@sga.pucminas.br)
     
+---
 
 ### 1.6 Responsável principal (PI / dono do experimento)
 
 **Vinicius Salles de Oliveira** - Responsável pela concepção, execução e análise dos resultados do experimento
+
+---
 
 ### 1.7 Projeto / produto / iniciativa relacionada
 
@@ -146,6 +155,7 @@ A anotação de genomas bacterianos representa um desafio de engenharia de softw
     
 *   Necessidade de metodologia replicável para avaliação de ferramentas similares
     
+---
 
 ### 2.4 Referencial teórico e empírico essencial
 
@@ -206,3 +216,7 @@ A anotação de genomas bacterianos representa um desafio de engenharia de softw
 2.  Ferramentas web serão mais consistentes em disponibilidade de atualizações
     
 3.  A diferença de performance será mais pronunciada em genomas grandes (>5 Mb)
+
+---
+
+
