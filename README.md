@@ -17,15 +17,15 @@ EXP-TCC-ANNOT-2025-001
 
 ### 1.3 Versão do documento e histórico de revisão
 
-- **v1.0** (21/11/2024): Criação inicial do documento com identificação básica e contexto
+- **v1.0** (21/11/2025): Criação inicial do documento com identificação básica e contexto
 
 ---
     
 ### 1.4 Datas (criação, última atualização)
 
-- **Data de criação:** 21/11/2024
+- **Data de criação:** 21/11/2025
     
-- **Última atualização:** 21/11/2024
+- **Última atualização:** 21/11/2025
     
 ---
 
