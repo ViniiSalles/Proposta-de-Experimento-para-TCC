@@ -5,7 +5,7 @@
 
 ### 1.1 Título do experimento
 
-Análise Comparativa de Performance e Acurácia: Anotadores Genômicos Web-based versus Desktop em Genomas Bacterianos
+Análise Comparativa de Performance e Qualidade de Software: Anotadores Genômicos Web-based versus Desktop em Genomas Bacterianos
 
 ---
 
