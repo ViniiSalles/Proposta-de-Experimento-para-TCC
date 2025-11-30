@@ -11,7 +11,7 @@ Análise Comparativa de Performance e Qualidade de Software: Anotadores Genômic
 
 ### 1.2 ID / código
 
-EXP-TCC-ANNOT-2025-002
+EXP-TCC-ANNOT-2025-003
 
 ---
 
@@ -20,6 +20,7 @@ EXP-TCC-ANNOT-2025-002
 - **v1.0** (21/11/2025): Criação inicial do documento com identificação básica e contexto
 - **v2.0** (22/11/2025): Definiçao de Escopo, Objetivo
 - **v2.5** (23/11/2025): Definiçao de Stakeholders/Impacto, Riscos de alto nível, premissas e critérios de sucesso
+- **v3.0** (28/11/2025): Modelo conceitual e hipóteses; Variáveis, fatores, tratamentos e objetos de estudo; Desenho experimental
 
 ---
     
@@ -27,7 +28,7 @@ EXP-TCC-ANNOT-2025-002
 
 - **Data de criação:** 21/11/2025
     
-- **Última atualização:** 23/11/2025
+- **Última atualização:** 30/11/2025
     
 ---
 
@@ -551,5 +552,297 @@ O experimento deve ser adiado ou cancelado se:
 
 ---
 
+## 7. Modelo conceitual e hipóteses
 
+### 7.1 Modelo conceitual do experimento
 
+O modelo conceitual deste experimento baseia-se na premissa de que diferentes arquiteturas de software (web-based vs desktop) apresentam trade-offs significativos em termos de performance, qualidade e usabilidade quando aplicadas ao domínio de anotação genômica.
+
+**Modelo proposto:**
+
+```
+Arquitetura de Software → Métricas de Qualidade de Software → Decisão de Adoção
+   ├── Web-based          ├── Performance (tempo, recursos)
+   └── Desktop            ├── Qualidade (completude, acurácia)
+                         └── Usabilidade (setup, integração)
+```
+
+**Relações esperadas:**
+
+- **Ferramentas Desktop:** Maior velocidade de processamento local, mas maior complexidade de instalação
+- **Ferramentas Web:** Menor barreira de entrada, mas dependência de conectividade e disponibilidade
+- **Tamanho do genoma:** Fator modulador que amplifica diferenças de performance
+
+---
+
+### 7.2 Hipóteses formais (H0, H1)
+
+#### H1 - Hipóteses sobre Performance
+
+**Hipótese Nula (H₀₁):** Não há diferença significativa no tempo médio de processamento entre ferramentas web-based e desktop.
+
+$$H_{0,1}: \mu_{tempo_{web}} = \mu_{tempo_{desktop}}$$
+
+**Hipótese Alternativa (H₁₁):** Ferramentas desktop apresentam tempo médio de processamento significativamente menor que ferramentas web-based.
+
+$$H_{1,1}: \mu_{tempo_{desktop}} < \mu_{tempo_{web}}$$
+
+#### H2 - Hipóteses sobre Qualidade da Anotação
+
+**Hipótese Nula (H₀₂):** Não há diferença significativa na completude da anotação (score BUSCO) entre os tipos de ferramentas.
+
+$$H_{0,2}: \mu_{BUSCO_{web}} = \mu_{BUSCO_{desktop}}$$
+
+**Hipótese Alternativa (H₁₂):** Existe diferença significativa na completude da anotação entre os tipos de ferramentas.
+
+$$H_{1,2}: \mu_{BUSCO_{web}} \neq \mu_{BUSCO_{desktop}}$$
+
+#### H3 - Hipóteses sobre Interação Tamanho × Arquitetura
+
+**Hipótese Nula (H₀₃):** O efeito do tipo de arquitetura no tempo de processamento não depende do tamanho do genoma.
+
+$$H_{0,3}: \text{Não há interação significativa entre arquitetura e tamanho}$$
+
+**Hipótese Alternativa (H₁₃):** O efeito do tipo de arquitetura no tempo de processamento varia significativamente com o tamanho do genoma.
+
+$$H_{1,3}: \text{Há interação significativa entre arquitetura e tamanho}$$
+
+#### H4 - Hipóteses sobre Confiabilidade
+
+**Hipótese Nula (H₀₄):** Não há diferença na taxa de sucesso entre ferramentas web-based e desktop.
+
+$$H_{0,4}: \pi_{sucesso_{web}} = \pi_{sucesso_{desktop}}$$
+
+**Hipótese Alternativa (H₁₄):** Ferramentas desktop apresentam maior taxa de sucesso que ferramentas web-based.
+
+$$H_{1,4}: \pi_{sucesso_{desktop}} > \pi_{sucesso_{web}}$$
+
+---
+
+### 7.3 Nível de significância e considerações de poder
+
+- **Nível de significância (α):** 0,05 para todos os testes
+- **Poder estatístico desejado:** 0,80 (80%)
+- **Tamanho do efeito esperado:**
+  - Para tempo: d = 0,8 (grande)
+  - Para qualidade: d = 0,5 (médio)
+- **Correção para múltiplas comparações:** Bonferroni (α ajustado = 0,0125 para 4 hipóteses principais)
+
+**Cálculo de tamanho amostral:** Com base no poder desejado e tamanho do efeito, são necessários pelo menos 18 genomas (6 por categoria de tamanho) para detectar diferenças significativas.
+
+---
+
+## 8. Variáveis, fatores, tratamentos e objetos de estudo
+
+### 8.1 Objetos de estudo
+
+Os objetos de estudo são genomas bacterianos completos obtidos do NCBI RefSeq, selecionados para representar diversidade taxonômica e variação de tamanho:
+
+- 18 genomas bacterianos divididos em três categorias:
+  - 6 genomas pequenos (<2 Mb)
+  - 6 genomas médios (2-5 Mb)
+  - 6 genomas grandes (>5 Mb)
+
+---
+
+### 8.2 Sujeitos / participantes (visão geral)
+
+**Participante único:** O pesquisador principal (Vinicius Salles de Oliveira) executará todos os experimentos para garantir consistência na operação e eliminar variabilidade inter-operador.
+
+**Perfil do operador:**
+
+- Graduando em Engenharia de Software
+- Conhecimento básico em bioinformática
+- Familiaridade com linha de comando
+- Treinamento prévio nas três ferramentas
+
+---
+
+### 8.3 Variáveis independentes (fatores) e seus níveis
+
+#### Tabela de Fatores e Níveis
+
+| Fator             | Descrição                                 | Níveis | Valores                                         |
+| ----------------- | ----------------------------------------- | ------ | ----------------------------------------------- |
+| Ferramenta        | Software de anotação genômica             | 3      | RAST (web), DFAST (web), Prokka (desktop)       |
+| Tamanho do Genoma | Categoria de tamanho do genoma bacteriano | 3      | Pequeno (<2 Mb), Médio (2-5 Mb), Grande (>5 Mb) |
+
+---
+
+### 8.4 Tratamentos (condições experimentais)
+
+#### Tabela de Tratamentos e Combinações
+
+| ID Tratamento | Ferramenta | Tamanho | Arquitetura | Descrição                                  |
+| ------------- | ---------- | ------- | ----------- | ------------------------------------------ |
+| T1            | RAST       | Pequeno | Web         | Anotação web de genoma <2 Mb via RAST      |
+| T2            | RAST       | Médio   | Web         | Anotação web de genoma 2-5 Mb via RAST     |
+| T3            | RAST       | Grande  | Web         | Anotação web de genoma >5 Mb via RAST      |
+| T4            | DFAST      | Pequeno | Web         | Anotação web de genoma <2 Mb via DFAST     |
+| T5            | DFAST      | Médio   | Web         | Anotação web de genoma 2-5 Mb via DFAST    |
+| T6            | DFAST      | Grande  | Web         | Anotação web de genoma >5 Mb via DFAST     |
+| T7            | Prokka     | Pequeno | Desktop     | Anotação local de genoma <2 Mb via Prokka  |
+| T8            | Prokka     | Médio   | Desktop     | Anotação local de genoma 2-5 Mb via Prokka |
+| T9            | Prokka     | Grande  | Desktop     | Anotação local de genoma >5 Mb via Prokka  |
+
+**Total:** 9 tratamentos (3 ferramentas × 3 tamanhos)
+
+---
+
+### 8.5 Variáveis dependentes (respostas)
+
+#### Tabela de Variáveis Dependentes
+
+| Variável              | Descrição                                    | Tipo     | Unidade       | Método de Medição         |
+| --------------------- | -------------------------------------------- | -------- | ------------- | ------------------------- |
+| Tempo Total           | Tempo desde início até conclusão da anotação | Contínua | minutos       | Cronômetro automatizado   |
+| Taxa de Processamento | Velocidade relativa ao tamanho               | Contínua | Mbp/min       | Calculada (tamanho/tempo) |
+| Uso de CPU            | Utilização média do processador              | Contínua | %             | Monitor de sistema        |
+| Uso de RAM            | Memória máxima utilizada                     | Contínua | GB            | Monitor de sistema        |
+| Número de CDS         | Total de genes codificadores                 | Discreta | quantidade    | Parser de arquivo GFF     |
+| Score BUSCO           | Completude da anotação                       | Contínua | %             | Software BUSCO            |
+| Taxa de Sucesso       | Conclusão bem-sucedida                       | Binária  | sucesso/falha | Observação direta         |
+| Tempo de Setup        | Tempo para instalação/config                 | Contínua | horas         | Cronômetro manual         |
+
+---
+
+### 8.6 Variáveis de controle / bloqueio
+
+#### Tabela de Variáveis de Controle
+
+| Variável               | Descrição                          | Como será controlada                             |
+| ---------------------- | ---------------------------------- | ------------------------------------------------ |
+| Hardware               | Especificações do computador       | Mesmo equipamento para todos os testes           |
+| Sistema Operacional    | Windows 11                         | Versão idêntica, atualizações pausadas           |
+| Conexão de Rede        | Velocidade de internet             | 1 Gbps dedicado, testes em horários consistentes |
+| Versão das Ferramentas | Versão específica de cada software | Documentada e fixada no início                   |
+| Operador               | Pessoa executando o teste          | Mesmo operador (pesquisador principal)           |
+| Ambiente               | Condições físicas                  | Mesma sala, temperatura controlada               |
+| Carga do Sistema       | Outros processos rodando           | Sistema dedicado, processos mínimos              |
+
+---
+
+### 8.7 Possíveis variáveis de confusão conhecidas
+
+#### Tabela de Variáveis de Confusão
+
+| Variável                       | Descrição                             | Potencial Impacto              | Estratégia de Mitigação             |
+| ------------------------------ | ------------------------------------- | ------------------------------ | ----------------------------------- |
+| Carga do Servidor Web          | Variação na fila RAST/DFAST           | Aumento no tempo de resposta   | Testes em múltiplos horários        |
+| Complexidade do Genoma         | Diferenças além do tamanho            | Variação na qualidade          | Seleção balanceada por complexidade |
+| Atualizações de Banco de Dados | Updates durante experimento           | Mudança nos resultados         | Snapshot dos bancos de dados        |
+| Efeito de Aprendizado          | Melhoria com repetição                | Redução artificial do tempo    | Randomização da ordem               |
+| Variação de Rede               | Flutuações na conectividade           | Impacto em ferramentas web     | Monitoramento contínuo              |
+| Cache                          | Dados em cache após primeira execução | Tempo artificialmente reduzido | Limpeza de cache entre testes       |
+
+---
+
+## 9. Desenho experimental
+
+### 9.1 Tipo de desenho (completamente randomizado, blocos, fatorial, etc.)
+
+**Tipo de desenho:** Fatorial completo 3×3 com medidas repetidas
+
+**Justificativa:**
+
+- Design fatorial permite avaliar efeitos principais (ferramenta, tamanho) e interações
+- Medidas repetidas aumentam precisão estatística
+- Todos os genomas são processados por todas as ferramentas
+
+**Estrutura:**
+
+- 2 fatores: Ferramenta (3 níveis) × Tamanho (3 níveis)
+- 18 unidades experimentais (genomas)
+- 54 observações totais (18 genomas × 3 ferramentas)
+
+---
+
+### 9.2 Randomização e alocação
+
+**Esquema de randomização:**
+
+- **Ordem dos genomas:** Randomização completa dentro de cada categoria de tamanho
+- **Ordem das ferramentas:** Randomização para cada genoma usando Latin Square
+- **Ordem temporal:** Distribuição aleatória ao longo dos dias de coleta
+
+**Implementação:**
+
+```python
+# Pseudocódigo
+import random
+random.seed(42)  # Para reprodutibilidade
+
+# Randomizar ordem de processamento
+for categoria in ['pequeno', 'medio', 'grande']:
+    genomas = random.shuffle(genomas_categoria)
+    for genoma in genomas:
+        ferramentas = random.shuffle(['RAST', 'DFAST', 'Prokka'])
+        executar_experimento(genoma, ferramentas)
+```
+
+---
+
+### 9.3 Balanceamento e contrabalanço
+
+**Estratégias de balanceamento:**
+
+1. **Balanceamento de características dos genomas:**
+
+   - Diversidade taxonômica igual entre categorias
+   - Conteúdo GC balanceado
+   - Complexidade genômica similar dentro de cada categoria
+
+2. **Contrabalanço temporal:**
+
+   - Alternância entre ferramentas web e desktop
+   - Distribuição uniforme ao longo do período
+   - Pausas entre execuções para reset de sistema
+
+3. **Controle de ordem:**
+   - Matriz Latin Square 3×3 para sequência de ferramentas
+   - Previne viés sistemático de ordem
+
+---
+
+### 9.4 Número de grupos e sessões
+
+**Estrutura de grupos:**
+
+- 3 grupos baseados em tamanho de genoma
+- 6 genomas por grupo
+- 3 sessões por genoma (uma para cada ferramenta)
+
+**Distribuição temporal:**
+
+- 54 sessões totais (18 genomas × 3 ferramentas)
+- 3-4 sessões por dia para evitar fadiga
+- 15-18 dias de coleta estimados
+
+**Justificativa do tamanho amostral:**
+
+- Poder estatístico de 0.80 para detectar diferenças grandes (d=0.8)
+- 6 réplicas por combinação ferramenta×tamanho
+- Margem para possíveis falhas ou exclusões
+
+### Resumo do Design Experimental
+
+**Matriz do Experimento:**
+
+| Genoma | Categoria | Sessão 1      | Sessão 2      | Sessão 3      |
+| ------ | --------- | ------------- | ------------- | ------------- |
+| G1     | Pequeno   | RAST          | Prokka        | DFAST         |
+| G2     | Pequeno   | DFAST         | RAST          | Prokka        |
+| G3     | Pequeno   | Prokka        | DFAST         | RAST          |
+| ...    | ...       | ...           | ...           | ...           |
+| G18    | Grande    | (randomizado) | (randomizado) | (randomizado) |
+
+Total: 54 execuções experimentais (18 genomas × 3 ferramentas)
+
+**Análise planejada:**
+
+- ANOVA two-way com medidas repetidas
+- Testes post-hoc (Tukey HSD) para comparações múltiplas
+- Análise de interação ferramenta × tamanho
+- Correlações entre métricas de qualidade e performance
+
+---
