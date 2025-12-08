@@ -11,7 +11,7 @@ Análise Comparativa de Performance e Qualidade de Software: Anotadores Genômic
 
 ### 1.2 ID / código
 
-EXP-TCC-ANNOT-2025-004
+EXP-TCC-ANNOT-2025-005
 
 ---
 
@@ -22,6 +22,7 @@ EXP-TCC-ANNOT-2025-004
 - **v2.5** (23/11/2025): Definiçao de Stakeholders/Impacto, Riscos de alto nível, premissas e critérios de sucesso
 - **v3.0** (28/11/2025): Modelo conceitual e hipóteses; Variáveis, fatores, tratamentos e objetos de estudo; Desenho experimental
 - **v4.0** (02/12/2025): População, sujeitos e amostragem; Instrumentação e protocolo operacional; Plano de análise de dados (pré-execução)
+- **v5.0** (08/12/2025): Plano de comunicação e Critérios de prontidão para execução (Definition of Ready)
 
 ---
     
@@ -29,7 +30,7 @@ EXP-TCC-ANNOT-2025-004
 
 - **Data de criação:** 21/11/2025
     
-- **Última atualização:** 02/12/2025
+- **Última atualização:** 08/12/2025
     
 ---
 
@@ -739,7 +740,41 @@ Os objetos de estudo são genomas bacterianos completos obtidos do NCBI RefSeq, 
 ---
 
 ## 9. Desenho experimental
-
+```mermaid
+flowchart TD
+  subgraph DESIGN["DESIGN FATORIAL 3x3"]
+      direction TB
+      
+      subgraph PEQUENO["GENOMAS PEQUENOS < 2Mb"]
+          G1[G1] --> |RAST→Prokka→DFAST| R1[Sessões 1-3]
+          G2[G2] --> |DFAST→RAST→Prokka| R2[Sessões 4-6]
+          G3[G3] --> |Prokka→DFAST→RAST| R3[Sessões 7-9]
+          G4[G4] --> R4[Sessões 10-12]
+          G5[G5] --> R5[Sessões 13-15]
+          G6[G6] --> R6[Sessões 16-18]
+      end
+      
+      subgraph MEDIO["GENOMAS MÉDIOS 2-5Mb"]
+          G7[G7] --> R7[Sessões 19-21]
+          G8[G8] --> R8[Sessões 22-24]
+          G9[G9] --> R9[Sessões 25-27]
+          G10[G10] --> R10[Sessões 28-30]
+          G11[G11] --> R11[Sessões 31-33]
+          G12[G12] --> R12[Sessões 34-36]
+      end
+      
+      subgraph GRANDE["GENOMAS GRANDES > 5Mb"]
+          G13[G13] --> R13[Sessões 37-39]
+          G14[G14] --> R14[Sessões 40-42]
+          G15[G15] --> R15[Sessões 43-45]
+          G16[G16] --> R16[Sessões 46-48]
+          G17[G17] --> R17[Sessões 49-51]
+          G18[G18] --> R18[Sessões 52-54]
+      end
+  end
+  
+  TOTAL[TOTAL: 54 OBSERVAÇÕES<br/>18 genomas × 3 ferramentas]
+```
 ### 9.1 Tipo de desenho (completamente randomizado, blocos, fatorial, etc.)
 
 **Tipo de desenho:** Fatorial completo 3×3 com medidas repetidas
@@ -1319,3 +1354,1354 @@ Dados Brutos → Limpeza → Análise Descritiva → Testes de Pressupostos → 
 | **Execução** | I1, I2, I3, I4, I5, I7 | VI, VD1-VD8 | M1-M7, M18-M19 |
 | **Pós-processamento** | I6, I8 | VD derivadas | M8-M11 |
 | **Análise** | R/Python | Todas | Todas |
+
+---
+
+## 13. Avaliação de validade (ameaças e mitigação)
+
+### 13.1 Validade de conclusão
+
+A validade de conclusão refere-se à capacidade de tirar conclusões estatísticas corretas sobre as relações entre variáveis.
+
+#### Ameaças Identificadas
+
+| Ameaça | Descrição | Impacto | Estratégia de Mitigação |
+|--------|-----------|---------|-------------------------|
+| **Baixo poder estatístico** | Amostra insuficiente para detectar efeitos reais | Falsos negativos (Erro Tipo II) | Cálculo de poder a priori; n=18 genomas garante poder de 0,80 para efeitos grandes |
+| **Violação de pressupostos** | Dados não-normais ou heterogêneos | Testes paramétricos inválidos | Testes de normalidade (Shapiro-Wilk); alternativas não-paramétricas disponíveis |
+| **Erros de medição** | Imprecisão nos instrumentos de coleta | Aumento da variância | Automação via scripts; calibração prévia; múltiplas medições |
+| **Fishing (múltiplas comparações)** | Inflação do erro Tipo I por múltiplos testes | Falsos positivos | Correção de Bonferroni; pré-registro das hipóteses |
+| **Variabilidade aleatória** | Flutuações nos servidores web | Ruído nos dados | Repetições em diferentes horários; registro de condições |
+| **Heterogeneidade dos genomas** | Diferenças intrínsecas entre genomas | Confusão de efeitos | Estratificação por tamanho; análise por blocos |
+
+---
+
+### 13.2 Validade interna
+
+A validade interna refere-se à capacidade de estabelecer relações causais entre variáveis independentes e dependentes.
+
+#### Ameaças Identificadas
+
+| Ameaça | Descrição | Estratégia de Controle |
+|--------|-----------|------------------------|
+| **History (História)** | Eventos externos durante o experimento (atualizações, manutenção) | Registro de todas as condições; documentação de eventos externos; período de coleta curto |
+| **Maturation (Maturação)** | Mudanças no operador ao longo do tempo (fadiga, aprendizado) | Randomização da ordem; intervalos entre sessões; automação máxima |
+| **Testing (Efeito de teste)** | Familiaridade com tarefas em execuções posteriores | Design within-subjects com contrabalanceamento; Latin Square |
+| **Instrumentation (Instrumentação)** | Mudanças nos instrumentos de medição | Versionamento fixo das ferramentas; scripts validados no piloto |
+| **Selection (Seleção)** | Viés na escolha dos genomas | Critérios de inclusão/exclusão pré-definidos; diversidade taxonômica |
+| **Mortality (Mortalidade)** | Perda de dados durante o experimento | Backup contínuo; protocolo de recuperação; genomas reserva |
+| **Diffusion (Difusão)** | Contaminação entre tratamentos | Não aplicável (mesmo genoma em todas as ferramentas) |
+| **Compensatory rivalry** | Competição entre condições | Não aplicável (ferramentas automatizadas) |
+
+#### Diagrama de Controle de Ameaças à Validade Interna
+```mermaid
+flowchart TD
+  subgraph CONTROLE["CONTROLE DE VALIDADE INTERNA"]
+      direction TB
+      CENTRO[Experimento]
+      
+      subgraph RAND["RANDOMIZAÇÃO"]
+          R1[Latin Square]
+          R2[Ordem aleatória]
+          R3[Horários variados]
+      end
+      
+      subgraph CTRL["CONTROLE"]
+          C1[Hardware fixo]
+          C2[Software versionado]
+          C3[Ambiente controlado]
+          C4[Operador único]
+      end
+      
+      subgraph AUTO["AUTOMAÇÃO"]
+          A1[Scripts Python]
+          A2[Monitores sistema]
+          A3[Coleta automática]
+          A4[Backup contínuo]
+      end
+      
+      RAND --> CENTRO
+      CTRL --> CENTRO
+      AUTO --> CENTRO
+  end
+```
+
+---
+
+### 13.3 Validade de constructo
+
+A validade de constructo refere-se à adequação das medidas operacionais aos conceitos teóricos que pretendem representar.
+
+#### Análise dos Constructos
+
+| Constructo | Operacionalização | Adequação | Limitações |
+|------------|-------------------|-----------|------------|
+| **Performance** | Tempo de execução (M1) | Alta | Inclui tempo de fila (web) |
+| **Eficiência** | Taxa de processamento (M3) | Alta | Depende da definição de "processamento" |
+| **Qualidade** | Score BUSCO (M10) | Alta | Validado pela comunidade científica |
+| **Completude** | % genes com função (M11) | Média | Depende do banco de dados usado |
+| **Confiabilidade** | Taxa de sucesso (M18) | Alta | Definição clara de sucesso |
+| **Usabilidade** | Tempo de setup (M12) | Média | Operador único pode não representar todos os perfis |
+
+#### Estratégias para Reduzir Ambiguidades
+
+| Estratégia | Descrição | Aplicação |
+|------------|-----------|-----------|
+| **Múltiplas métricas por constructo** | Usar 2+ métricas para cada conceito | Performance: M1, M2, M3; Qualidade: M6, M7, M10, M11 |
+| **Definições operacionais claras** | Documentar exatamente o que cada métrica mede | Tabela de métricas com descrições detalhadas |
+| **Validação por especialistas** | Revisão das métricas pelo orientador | Aprovação do protocolo antes da execução |
+| **Triangulação** | Comparar resultados de diferentes métricas | Correlacionar tempo com qualidade |
+| **Métricas padronizadas** | Usar métricas estabelecidas na literatura | BUSCO é padrão de facto para completude |
+
+---
+
+### 13.4 Validade externa
+
+A validade externa refere-se à capacidade de generalizar os resultados para outros contextos, populações e períodos.
+
+#### Análise de Generalização
+
+| Dimensão | Contexto do Estudo | Generalização Possível | Generalização Limitada |
+|----------|-------------------|------------------------|------------------------|
+| **Organismos** | Bactérias | Outros procariotos | Eucariotos, vírus |
+| **Tamanho** | 0,5-13 Mb | Faixa típica de bactérias | Genomas atípicos |
+| **Ferramentas** | RAST, DFAST, Prokka | Ferramentas similares | Pipelines customizados |
+| **Hardware** | Desktop Windows | Workstations similares | Clusters, cloud |
+| **Usuário** | Acadêmico iniciante | Estudantes, pesquisadores | Profissionais experientes |
+| **Período** | 2025 | Curto prazo (1-2 anos) | Longo prazo (versões futuras) |
+
+#### Limitações de Generalização
+
+| Fator Limitante | Impacto | Recomendação para Futuros Estudos |
+|-----------------|---------|-----------------------------------|
+| **Ambiente Windows** | Possíveis diferenças em Linux/Mac | Replicar em outros SOs |
+| **Conexão de 1 Gbps** | Não representa conexões lentas | Testar com diferentes velocidades |
+| **Operador único** | Não captura variabilidade inter-operador | Incluir múltiplos operadores |
+| **Versões específicas** | Ferramentas evoluem | Documentar versões; replicar periodicamente |
+| **Genomas selecionados** | Podem não representar toda diversidade | Expandir amostra em estudos futuros |
+
+---
+
+### 13.5 Resumo das principais ameaças e estratégias de mitigação
+
+#### Tabela Resumo de Ameaças Críticas
+
+| # | Ameaça | Tipo de Validade | Criticidade | Mitigação Principal | Status |
+|---|--------|------------------|-------------|---------------------|--------|
+| 1 | Baixo poder estatístico | Conclusão | Alta | n=18 com cálculo de poder | ✅ Planejado |
+| 2 | Efeito de aprendizado | Interna | Alta | Randomização Latin Square | ✅ Planejado |
+| 3 | Variabilidade de servidores | Conclusão | Média | Múltiplas execuções; registro de condições | ✅ Planejado |
+| 4 | Métricas inadequadas | Constructo | Média | Múltiplas métricas; validação prévia | ✅ Planejado |
+| 5 | Generalização limitada | Externa | Média | Documentação detalhada; escopo claro | ✅ Planejado |
+| 6 | Falha de ferramentas | Interna | Alta | Protocolo de recuperação; backups | ✅ Planejado |
+| 7 | Múltiplas comparações | Conclusão | Média | Correção de Bonferroni | ✅ Planejado |
+| 8 | Operador único | Externa | Baixa | Aceito como limitação; documentado | ⚠️ Limitação |
+
+---
+
+## 14. Ética, privacidade e conformidade
+
+### 14.1 Questões éticas (uso de sujeitos, incentivos, etc.)
+
+#### Natureza do Experimento
+
+Este experimento **não envolve participantes humanos** como sujeitos de pesquisa. Os objetos de estudo são genomas bacterianos (dados públicos) e ferramentas de software.
+
+#### Análise de Questões Éticas
+
+| Aspecto | Situação | Classificação |
+|---------|----------|---------------|
+| **Participantes humanos** | Não há | Sem risco ético |
+| **Dados sensíveis** | Genomas de bactérias (não humanas) | Sem risco |
+| **Propriedade intelectual** | Uso de ferramentas gratuitas/open source | Conforme licenças |
+| **Conflito de interesse** | Pesquisador não vinculado às ferramentas | Não identificado |
+| **Uso de recursos** | Hardware pessoal; servidores públicos | Uso legítimo |
+| **Publicação de resultados** | Dados públicos; análise original | Permitido |
+
+#### Considerações Éticas Secundárias
+
+| Questão | Análise | Ação |
+|---------|---------|------|
+| **Impacto nos servidores públicos** | Uso moderado (18 genomas) | Respeitar limites de uso; evitar sobrecarga |
+| **Crédito às ferramentas** | Uso de trabalho de outros desenvolvedores | Citar adequadamente; reconhecer contribuições |
+| **Transparência** | Resultados podem favorecer uma ferramenta | Análise imparcial; disponibilizar dados brutos |
+| **Reprodutibilidade** | Comunidade científica beneficiada | Disponibilizar scripts e dados |
+
+---
+
+### 14.2 Consentimento informado
+
+#### Aplicabilidade
+
+| Grupo | Necessidade de Consentimento | Justificativa |
+|-------|------------------------------|---------------|
+| **Participantes humanos** | Não aplicável | Não há participantes humanos |
+| **Operador (pesquisador)** | Não aplicável | Próprio pesquisador |
+| **Orientador** | Não necessário formalmente | Relação acadêmica existente |
+| **Mantenedores das ferramentas** | Não necessário | Uso conforme termos de serviço |
+
+#### Termos de Uso das Ferramentas
+
+| Ferramenta | Licença | Uso Acadêmico | Publicação de Benchmarks |
+|------------|---------|---------------|--------------------------|
+| **RAST** | Gratuito para academia | ✅ Permitido | ✅ Permitido |
+| **DFAST** | Gratuito | ✅ Permitido | ✅ Permitido |
+| **Prokka** | GPL v3 | ✅ Permitido | ✅ Permitido |
+| **BUSCO** | MIT License | ✅ Permitido | ✅ Permitido |
+
+---
+
+### 14.3 Privacidade e proteção de dados
+
+#### Dados Coletados
+
+| Tipo de Dado | Descrição | Classificação | Proteção |
+|--------------|-----------|---------------|----------|
+| **Genomas bacterianos** | Sequências de DNA de bactérias | Dados públicos | Não requer proteção especial |
+| **Métricas de performance** | Tempos, uso de recursos | Dados técnicos | Nenhuma informação pessoal |
+| **Logs de execução** | Saídas das ferramentas | Dados técnicos | Nenhuma informação pessoal |
+| **Credenciais de acesso** | Login RAST/DFAST | Dados pessoais do operador | Não serão compartilhadas |
+
+#### Medidas de Proteção
+
+| Medida | Descrição | Implementação |
+|--------|-----------|---------------|
+| **Credenciais** | Senhas de acesso aos servidores web | Armazenadas localmente; não versionadas no Git |
+| **Repositório** | Código e dados | Repositório público sem dados sensíveis |
+| **Backup** | Cópias de segurança | Criptografado; acesso restrito |
+| **Publicação** | Dados do experimento | Apenas dados técnicos; sem informações pessoais |
+
+#### Período de Retenção
+
+| Dado | Período de Retenção | Destino Final |
+|------|---------------------|---------------|
+| Genomas (cópias locais) | Duração do projeto + 5 anos | Deletados (originais no NCBI) |
+| Métricas coletadas | Permanente | Repositório público |
+| Scripts e código | Permanente | Repositório público |
+| Logs de execução | 2 anos | Arquivados ou deletados |
+
+---
+
+### 14.4 Aprovações necessárias (comitê de ética, jurídico, DPO, etc.)
+
+#### Lista de Aprovações
+
+| Órgão/Pessoa | Necessidade | Justificativa | Status |
+|--------------|-------------|---------------|--------|
+| **Comitê de Ética em Pesquisa (CEP)** | Não necessário | Não envolve seres humanos, animais ou dados sensíveis | N/A |
+| **Orientador** | Necessário | Aprovação acadêmica do plano | 🔄 Em andamento |
+| **Coordenação do Curso** | Não necessário | TCC segue normas padrão | N/A |
+| **DPO (Data Protection Officer)** | Não necessário | Não há dados pessoais de terceiros | N/A |
+| **Jurídico** | Não necessário | Uso de ferramentas públicas/open source | N/A |
+| **Mantenedores das ferramentas** | Não necessário | Uso conforme termos públicos | N/A |
+
+#### Documentação de Conformidade
+
+| Documento | Descrição | Status |
+|-----------|-----------|--------|
+| Termo de uso RAST | Aceite dos termos de serviço | ✅ Aceito |
+| Termo de uso DFAST | Aceite dos termos de serviço | ✅ Aceito |
+| Licença Prokka (GPL v3) | Conformidade com licença | ✅ Conforme |
+| Política de uso NCBI | Uso de dados genômicos | ✅ Conforme |
+
+---
+
+## 15. Recursos, infraestrutura e orçamento
+
+### 15.1 Recursos humanos e papéis
+
+#### Equipe do Experimento
+
+| Papel | Nome | Responsabilidades | Dedicação |
+|-------|------|-------------------|-----------|
+| **Pesquisador Principal** | Vinicius Salles de Oliveira | Planejamento, execução, análise, redação | 20h/semana |
+| **Orientador** | Prof. Danilo de Quadros Maia Filho | Supervisão, revisão, aprovações | 2h/semana |
+| **Suporte técnico** | (Se necessário) | Resolução de problemas de infraestrutura | Sob demanda |
+
+#### Matriz RACI
+
+| Atividade | Pesquisador | Orientador |
+|-----------|:-----------:|:----------:|
+| Elaboração do plano | R, A | C, I |
+| Configuração de ambiente | R, A | I |
+| Execução do experimento | R, A | I |
+| Coleta de dados | R, A | I |
+| Análise estatística | R, A | C |
+| Redação do TCC | R, A | C |
+| Revisão final | R | A |
+| Apresentação | R, A | I |
+
+*R = Responsável, A = Aprova, C = Consultado, I = Informado*
+
+---
+
+### 15.2 Infraestrutura técnica necessária
+
+#### Hardware
+
+| Componente | Especificação | Disponibilidade |
+|------------|---------------|-----------------|
+| **Processador** | AMD Ryzen 5 5600 (6 cores/12 threads) | ✅ Disponível |
+| **Memória RAM** | 32 GB DDR4 3200MHz | ✅ Disponível |
+| **Armazenamento** | SSD NVMe 500GB + HDD 1TB | ✅ Disponível |
+| **GPU** | RTX 4060 Ti 8GB (não essencial) | ✅ Disponível |
+| **Rede** | Conexão 1 Gbps | ✅ Disponível |
+
+#### Software
+
+| Software | Versão | Finalidade | Licença | Status |
+|----------|--------|------------|---------|--------|
+| **Windows 11** | 23H2 | Sistema operacional | OEM | ✅ Instalado |
+| **WSL2 + Ubuntu** | 22.04 LTS | Ambiente Linux para Prokka | Gratuito | ✅ Instalado |
+| **Python** | 3.11+ | Scripts de automação | MIT | ✅ Instalado |
+| **R** | 4.3+ | Análise estatística | GPL | 🔄 A instalar |
+| **Prokka** | 1.14.6 | Anotação local | GPL v3 | 🔄 A instalar |
+| **BUSCO** | 5.4+ | Avaliação de completude | MIT | 🔄 A instalar |
+| **Git** | 2.40+ | Versionamento | GPL | ✅ Instalado |
+| **VS Code** | Latest | Editor de código | MIT | ✅ Instalado |
+
+#### Serviços Online
+
+| Serviço | URL | Finalidade | Conta |
+|---------|-----|------------|-------|
+| **RAST** | rast.nmpdr.org | Anotação web | 🔄 A criar |
+| **DFAST** | dfast.ddbj.nig.ac.jp | Anotação web | 🔄 A criar |
+| **NCBI** | ncbi.nlm.nih.gov | Download de genomas | Não necessária |
+| **GitHub** | github.com | Repositório | ✅ Existente |
+
+---
+
+### 15.3 Materiais e insumos
+
+#### Lista de Materiais
+
+| Categoria | Item | Quantidade | Status |
+|-----------|------|------------|--------|
+| **Hardware** | Workstation pessoal | 1 | ✅ Disponível |
+| **Hardware** | Monitor adicional | 1 | ✅ Disponível |
+| **Software** | Licenças (todas gratuitas) | - | ✅ N/A |
+| **Dados** | Genomas FASTA | 18 + 3 piloto | 🔄 A baixar |
+| **Documentos** | Templates de checklist | 5 | 🔄 A criar |
+| **Documentos** | Guias rápidos | 4 | 🔄 A criar |
+| **Scripts** | Automação Python | ~10 | 🔄 A desenvolver |
+| **Armazenamento** | Espaço em disco | ~50 GB | ✅ Disponível |
+| **Backup** | Google Drive/OneDrive | 15 GB | ✅ Disponível |
+
+---
+
+### 15.4 Orçamento e custos estimados
+
+#### Estimativa de Custos
+
+| Item | Descrição | Custo Unitário | Quantidade | Custo Total |
+|------|-----------|----------------|------------|-------------|
+| **Hardware** | Já disponível | R$ 0,00 | - | R$ 0,00 |
+| **Software** | Ferramentas gratuitas | R$ 0,00 | - | R$ 0,00 |
+| **Internet** | Já incluído na residência | R$ 0,00 | - | R$ 0,00 |
+| **Energia elétrica** | Estimativa uso do PC | R$ 0,50/kWh | ~200h × 0,3kW | R$ 30,00 |
+| **Armazenamento cloud** | Google Drive gratuito | R$ 0,00 | 15 GB | R$ 0,00 |
+| **Impressão** | Relatório final (opcional) | R$ 0,30/página | ~100 páginas | R$ 30,00 |
+| **Horas pesquisador** | Custo de oportunidade | - | 320 horas | (não contabilizado) |
+
+#### Resumo Financeiro
+
+| Categoria | Valor |
+|-----------|-------|
+| **Custo direto total** | R$ 60,00 |
+| **Fonte de financiamento** | Recursos próprios |
+| **Contingência (10%)** | R$ 6,00 |
+| **Orçamento total** | R$ 66,00 |
+
+---
+
+## 16. Cronograma, marcos e riscos operacionais
+
+### 16.1 Macrocronograma (até o início da execução)
+
+#### Cronograma Geral (16 semanas)
+
+
+#### Marcos Principais
+
+| Marco | Descrição | Data Planejada | Critério de Conclusão |
+|-------|-----------|----------------|----------------------|
+| **M1** | Plano aprovado | Semana 2 | Aprovação do orientador |
+| **M2** | Ambiente configurado | Semana 4 | Todas ferramentas funcionais |
+| **M3** | Piloto concluído | Semana 5 | 9 execuções bem-sucedidas |
+| **M4** | Início da coleta | Semana 6 | Go/No-Go positivo |
+| **M5** | Coleta concluída | Semana 10 | 54 observações coletadas |
+| **M6** | Análise concluída | Semana 12 | Resultados estatísticos prontos |
+| **M7** | TCC finalizado | Semana 15 | Documento completo |
+| **M8** | Entrega final | Semana 16 | Submissão ao sistema |
+
+---
+
+### 16.2 Dependências entre atividades
+
+#### Diagrama de Dependências
+```mermaid
+flowchart TD
+  A1[A1: Elaboração do Plano] --> A2[A2: Aprovação do Orientador]
+  
+  A2 --> A3[A3: Download dos Genomas]
+  A2 --> A4[A4: Instalação das Ferramentas]
+  
+  A4 --> A5[A5: Config. Ambiente]
+  A4 --> A6[A6: Desenv. Scripts]
+  
+  A5 --> A7[A7: Validação do Ambiente]
+  A6 --> A7
+  A3 --> A8
+  A7 --> A8[A8: Execução do Piloto]
+  
+  A8 --> A9[A9: Ajustes Pós-Piloto]
+  A9 --> A10{A10: Go/No-Go?}
+  
+  A10 -->|No-Go| STOP([PARAR])
+  A10 -->|Go| A11[A11: Execução Principal]
+  
+  A11 --> A12[A12: Pós-Processamento BUSCO]
+  A12 --> A13[A13: Análise Estatística]
+  A13 --> A14[A14: Interpretação dos Resultados]
+  A14 --> A15[A15: Redação do TCC]
+  A15 --> A16[A16: Revisão com Orientador]
+  A16 --> A17[A17: Entrega Final]
+```
+
+#### Tabela de Dependências
+
+| Atividade | Predecessora | Tipo | Lag |
+|-----------|--------------|------|-----|
+| A2 | A1 | Finish-to-Start | 0 |
+| A3 | A2 | Finish-to-Start | 0 |
+| A4 | A2 | Finish-to-Start | 0 |
+| A5 | A4 | Finish-to-Start | 0 |
+| A6 | A4 | Finish-to-Start | 0 |
+| A7 | A5, A6 | Finish-to-Start | 0 |
+| A8 | A3, A7 | Finish-to-Start | 0 |
+| A9 | A8 | Finish-to-Start | 0 |
+| A10 | A9 | Finish-to-Start | 0 |
+| A11 | A10 | Finish-to-Start | 0 |
+| A12 | A11 | Finish-to-Start | 0 |
+| A13 | A12 | Finish-to-Start | 0 |
+| A14 | A13 | Finish-to-Start | 0 |
+| A15 | A14 | Start-to-Start | +3 dias |
+| A16 | A15 | Finish-to-Start | 0 |
+| A17 | A16 | Finish-to-Start | 0 |
+
+---
+
+### 16.3 Riscos operacionais e plano de contingência
+
+#### Matriz de Riscos Operacionais
+
+| ID | Risco | Probabilidade | Impacto | Severidade | Contingência |
+|----|-------|---------------|---------|------------|--------------|
+| RO1 | Falha no hardware | Baixa | Alto | Média | Usar laboratório da PUC; cloud computing |
+| RO2 | Indisponibilidade RAST/DFAST | Média | Alto | Alta | Reagendar; usar horários alternativos |
+| RO3 | Problemas de instalação Prokka | Alta | Médio | Alta | WSL2; Docker; VM Linux |
+| RO4 | Perda de dados | Baixa | Muito Alto | Alta | Backup diário; versionamento Git |
+| RO5 | Atraso no cronograma | Média | Médio | Média | Buffer de 2 semanas; paralelização |
+| RO6 | Indisponibilidade do orientador | Baixa | Médio | Baixa | Comunicação assíncrona; reuniões online |
+| RO7 | Sobrecarga acadêmica | Alta | Médio | Alta | Planejamento antecipado; priorização |
+| RO8 | Mudança nos serviços web | Baixa | Alto | Média | Documentar versões; adaptação do protocolo |
+
+#### Planos de Contingência Detalhados
+
+| Risco | Trigger | Ação de Contingência | Responsável |
+|-------|---------|---------------------|-------------|
+| **RO1** | Hardware não funciona | 1) Tentar reparo; 2) Usar outro PC; 3) Solicitar acesso a lab | Pesquisador |
+| **RO2** | Servidor offline >24h | 1) Aguardar; 2) Testar outro horário; 3) Documentar como missing data | Pesquisador |
+| **RO3** | Instalação falha | 1) WSL2; 2) Docker oficial; 3) VM Ubuntu; 4) Servidor remoto | Pesquisador |
+| **RO4** | Arquivo corrompido | 1) Restaurar do Git; 2) Restaurar do backup cloud; 3) Re-executar | Pesquisador |
+| **RO5** | Atraso >1 semana | 1) Reavaliar escopo; 2) Reduzir amostra; 3) Priorizar entregas | Pesquisador + Orientador |
+
+---
+
+## 17. Governança do experimento
+
+### 17.1 Papéis e responsabilidades formais
+
+#### Estrutura de Governança
+```mermaid
+flowchart TD
+  subgraph GOV["ESTRUTURA DE GOVERNANÇA"]
+      ORIENT[ORIENTADOR<br/>Prof. Danilo Maia<br/>Decisões Finais<br/>Aprovações]
+      
+      PESQ[PESQUISADOR<br/>Vinicius Salles<br/>Execução Total<br/>Análise e Redação]
+      
+      subgraph STAKE["STAKEHOLDERS"]
+          S1[Coordenação]
+          S2[Colegas]
+      end
+      
+      subgraph COMUN["COMUNIDADE"]
+          C1[Outros alunos]
+          C2[Pesquisadores]
+      end
+      
+      ORIENT -->|Supervisiona<br/>Aprova| PESQ
+      PESQ -->|Informa| STAKE
+      PESQ -->|Beneficia| COMUN
+  end
+```
+
+#### Matriz de Responsabilidades
+
+| Decisão/Atividade | Pesquisador | Orientador |
+|-------------------|:-----------:|:----------:|
+| Definição do escopo | Propõe | Aprova |
+| Escolha das ferramentas | Decide | Informado |
+| Design experimental | Propõe | Aprova |
+| Execução do experimento | Executa | Informado |
+| Análise de dados | Executa | Revisa |
+| Interpretação de resultados | Propõe | Valida |
+| Mudanças no plano | Propõe | Aprova |
+| Decisão Go/No-Go | Recomenda | Decide |
+| Redação do TCC | Executa | Revisa |
+| Entrega final | Executa | Aprova |
+
+---
+
+### 17.2 Ritos de acompanhamento pré-execução
+
+#### Reuniões Planejadas
+
+| Reunião | Frequência | Participantes | Pauta |
+|---------|------------|---------------|-------|
+| **Orientação regular** | Semanal | Pesquisador, Orientador | Progresso, dúvidas, próximos passos |
+| **Checkpoint de fase** | Por marco | Pesquisador, Orientador | Revisão de entregáveis, Go/No-Go |
+| **Revisão do plano** | Uma vez | Pesquisador, Orientador | Aprovação final do protocolo |
+| **Pós-piloto** | Uma vez | Pesquisador, Orientador | Análise do piloto, ajustes |
+
+#### Agenda de Checkpoints
+
+| Checkpoint | Semana | Objetivo | Entregável Esperado |
+|------------|--------|----------|---------------------|
+| CP1 | 2 | Aprovar plano | Documento do plano |
+| CP2 | 4 | Validar ambiente | Ambiente funcional |
+| CP3 | 5 | Revisar piloto | Relatório do piloto |
+| CP4 | 6 | Decisão Go/No-Go | Aprovação para execução |
+| CP5 | 10 | Validar dados | Dataset completo |
+| CP6 | 12 | Revisar análise | Resultados estatísticos |
+| CP7 | 15 | Revisar TCC | Documento final |
+
+---
+
+### 17.3 Processo de controle de mudanças no plano
+
+#### Fluxo de Controle de Mudanças
+```mermaid
+flowchart TD
+  A[IDENTIFICAR MUDANÇA] --> B[CLASSIFICAR IMPACTO]
+  
+  B --> C{Tipo de Mudança?}
+  
+  C -->|Menor| D[Mudança Menor<br/>Não afeta design/escopo]
+  C -->|Maior| E[Mudança Maior<br/>Afeta design/escopo/crono]
+  
+  D --> I[IMPLEMENTAR E REGISTRAR]
+  
+  E --> F[DOCUMENTAR PROPOSTA]
+  F --> G[SUBMETER AO ORIENTADOR]
+  G --> H{APROVAR?}
+  
+  H -->|SIM| I
+  H -->|NÃO| J[REJEITAR<br/>Documentar motivo]
+  
+  I --> K[ATUALIZAR DOCUMENTOS]
+  K --> L([FIM])
+  J --> L
+```
+
+#### Classificação de Mudanças
+
+| Tipo | Exemplos | Aprovação Necessária |
+|------|----------|---------------------|
+| **Menor** | Correção de typos, ajuste de horários, clarificação | Auto-aprovada |
+| **Moderada** | Mudança em scripts, ajuste de métricas secundárias | Informar orientador |
+| **Maior** | Mudança no design, redução de amostra, nova ferramenta | Aprovação formal |
+| **Crítica** | Cancelamento, mudança de objetivo | Reunião especial |
+
+#### Registro de Mudanças
+
+| Campo | Descrição |
+|-------|-----------|
+| ID da mudança | Identificador único (CHG-001) |
+| Data | Data da solicitação |
+| Solicitante | Quem identificou a necessidade |
+| Descrição | O que precisa mudar |
+| Justificativa | Por que a mudança é necessária |
+| Impacto | Escopo, cronograma, qualidade |
+| Classificação | Menor/Moderada/Maior/Crítica |
+| Decisão | Aprovada/Rejeitada/Pendente |
+| Data da decisão | Quando foi decidido |
+| Responsável pela implementação | Quem implementará |
+
+---
+
+## 18. Plano de documentação e reprodutibilidade
+
+### 18.1 Repositórios e convenções de nomeação
+
+#### Estrutura do Repositório
+**Nome do Repositório:** `exp-tcc-annot-2025`
+
+**Diretório Raiz**
+
+| Arquivo/Pasta | Descrição |
+|---------------|-----------|
+| `README.md` | Visão geral do projeto |
+| `LICENSE` | Licença MIT |
+| `CHANGELOG.md` | Histórico de mudanças |
+| `docs/` | Documentação |
+| `data/` | Dados |
+| `scripts/` | Scripts |
+| `notebooks/` | Jupyter notebooks |
+| `outputs/` | Saídas |
+
+---
+
+**📁 docs/** (Documentação)
+
+| Arquivo/Pasta | Descrição |
+|---------------|-----------|
+| `plano-experimento.md` | Este documento |
+| `guias/` | Guias rápidos |
+| `guias/guia-rast.pdf` | Guia do RAST |
+| `guias/guia-dfast.pdf` | Guia do DFAST |
+| `guias/guia-prokka.pdf` | Guia do Prokka |
+| `checklists/` | Checklists |
+| `checklists/checklist-pre-sessao.pdf` | Checklist pré-sessão |
+| `checklists/checklist-pos-sessao.pdf` | Checklist pós-sessão |
+
+---
+
+**📁 data/** (Dados)
+
+| Arquivo/Pasta | Descrição |
+|---------------|-----------|
+| `raw/` | Dados brutos |
+| `raw/genomes/` | Arquivos FASTA |
+| `raw/annotations/` | Resultados das ferramentas |
+| `processed/` | Dados processados |
+| `processed/metrics/` | Métricas extraídas |
+| `results/` | Resultados finais |
+| `results/statistical/` | Saídas estatísticas |
+
+---
+
+**📁 scripts/** (Scripts)
+
+| Arquivo/Pasta | Descrição |
+|---------------|-----------|
+| `collection/` | Coleta de dados |
+| `collection/timer.py` | Cronometragem |
+| `collection/monitor_system.py` | Monitor de recursos |
+| `collection/parse_results.py` | Parser de resultados |
+| `analysis/` | Análise |
+| `analysis/descriptive.R` | Estatísticas descritivas |
+| `analysis/hypothesis_tests.R` | Testes de hipóteses |
+| `analysis/visualizations.R` | Visualizações |
+| `utils/` | Utilitários |
+| `utils/download_genomes.py` | Download de genomas |
+| `utils/validate_fasta.py` | Validação de FASTA |
+
+---
+
+**📁 notebooks/** (Jupyter Notebooks)
+
+| Arquivo | Descrição |
+|---------|-----------|
+| `01_exploratory.ipynb` | Análise exploratória |
+| `02_analysis.ipynb` | Análise principal |
+
+---
+
+**📁 outputs/** (Saídas)
+
+| Arquivo/Pasta | Descrição |
+|---------------|-----------|
+| `figures/` | Gráficos |
+| `tables/` | Tabelas |
+| `reports/` | Relatórios |
+
+#### Convenções de Nomeação
+
+| Tipo | Padrão | Exemplo |
+|------|--------|---------|
+| **Genomas** | `G{XX}_{organismo}_{tamanho}.fasta` | `G01_mgenitalium_small.fasta` |
+| **Anotações** | `G{XX}_{ferramenta}_{data}.gff` | `G01_prokka_20250115.gff` |
+| **Métricas** | `metrics_{fase}_{data}.csv` | `metrics_execucao_20250120.csv` |
+| **Scripts** | `{funcao}_{descricao}.{ext}` | `collect_timing_data.py` |
+| **Figuras** | `fig{XX}_{descricao}.{ext}` | `fig01_tempo_por_ferramenta.png` |
+| **Logs** | `log_{sessao}_{data}.txt` | `log_G01_rast_20250115.txt` |
+
+---
+
+### 18.2 Templates e artefatos padrão
+
+#### Lista de Templates
+
+| Template | Formato | Localização | Finalidade |
+|----------|---------|-------------|------------|
+| Checklist pré-sessão | PDF/Form | `docs/checklists/` | Verificações antes da execução |
+| Checklist pós-sessão | PDF/Form | `docs/checklists/` | Verificações após execução |
+| Planilha de métricas | CSV/Excel | `data/templates/` | Registro de dados |
+| Log de sessão | TXT | `data/templates/` | Registro de observações |
+| Relatório de incidente | MD | `docs/templates/` | Documentar problemas |
+| Proposta de mudança | MD | `docs/templates/` | Solicitar alterações |
+
+#### Template: Planilha de Métricas
+
+```csv
+sessao_id,genoma_id,ferramenta,data,hora_inicio,hora_fim,tempo_total_min,cpu_medio_pct,ram_max_gb,cds_count,rna_count,status,observacoes
+S001,G01,RAST,2025-01-15,09:00,09:45,45,NA,NA,482,45,sucesso,
+S002,G01,DFAST,2025-01-15,10:30,11:00,30,NA,NA,485,44,sucesso,
+S003,G01,Prokka,2025-01-15,14:00,14:05,5,78,2.1,480,43,sucesso,
+```
+
+---
+
+### 18.3 Plano de empacotamento para replicação futura
+
+#### Componentes do Pacote de Replicação
+
+| Componente | Conteúdo | Formato | Tamanho Estimado |
+|------------|----------|---------|------------------|
+| **Documentação completa** | Plano, protocolo, guias, checklists | PDF, Markdown | ~5 MB |
+| **Dados brutos** | Genomas FASTA, anotações GFF/GBK | FASTA, GFF, GBK | ~500 MB |
+| **Dados processados** | Métricas extraídas, resultados BUSCO | CSV, JSON | ~50 MB |
+| **Código fonte** | Scripts de coleta e análise | Python, R | ~2 MB |
+| **Ambiente computacional** | Dependências, configurações | TXT, YAML, JSON | ~100 KB |
+| **Resultados finais** | Figuras, tabelas, relatório | PNG, CSV, PDF | ~20 MB |
+
+#### Estrutura do Pacote de Replicação
+
+| Diretório | Conteúdo | Quantidade de Arquivos |
+|-----------|----------|------------------------|
+| `01-documentation` | Plano, protocolo, checklists, guias | 7 arquivos |
+| `02-data/raw` | Genomas, anotações, logs | ~75 arquivos |
+| `02-data/processed` | Métricas consolidadas | 3 arquivos |
+| `02-data/metadata` | Metadados | 2 arquivos |
+| `03-code/collection` | Scripts de coleta | 6 arquivos |
+| `03-code/analysis` | Scripts de análise | 6 arquivos |
+| `03-code/utils` | Utilitários | 2 arquivos |
+| `04-results` | Figuras, tabelas, relatórios | ~10 arquivos |
+| `05-environment` | Configuração de ambiente | 4 arquivos |
+| **Total estimado** | | **~115 arquivos** |
+
+#### Arquivo de Dependências Python (requirements.txt)
+pandas>=2.0.0 numpy>=1.24.0 matplotlib>=3.7.0 seaborn>=0.12.0 biopython>=1.81 psutil>=5.9.0 scipy>=1.10.0
+
+#### Arquivo de Dependências R (renv.lock resumido)
+
+```json
+{
+"R": {
+  "Version": "4.3.0"
+},
+"Packages": {
+  "ggplot2": {"Version": "3.4.0"},
+  "dplyr": {"Version": "1.1.0"},
+  "tidyr": {"Version": "1.3.0"},
+  "car": {"Version": "3.1.0"},
+  "effectsize": {"Version": "0.8.0"},
+  "rstatix": {"Version": "0.7.2"}
+}
+}
+```
+#### Instruções de Replicação (README.md do pacote)
+```
+# Pacote de Replicação: Análise Comparativa de Anotadores Genômicos
+
+## Visão Geral
+Este pacote contém todos os materiais necessários para replicar o experimento 
+"Análise Comparativa de Performance e Qualidade: Anotadores Genômicos Web-based 
+versus Desktop em Genomas Bacterianos".
+
+## Requisitos do Sistema
+- **Sistema Operacional:** Windows 10/11 com WSL2 ou Linux Ubuntu 20.04+
+- **Memória RAM:** Mínimo 16 GB (recomendado 32 GB)
+- **Armazenamento:** 10 GB livres
+- **Internet:** Conexão estável para ferramentas web
+
+## Instalação Rápida
+
+### Opção 1: Docker (Recomendado)
+docker-compose up -d
+docker exec -it exp-annot bash
+
+### Opção 2: Instalação Manual
+
+#### Python
+python -m venv venv
+source venv/bin/activate  # Linux/WSL
+pip install -r 03-code/requirements.txt
+
+#### R
+install.packages("renv")
+renv::restore()
+
+#### Prokka (via Conda)
+conda create -n prokka -c bioconda prokka
+conda activate prokka
+
+#### BUSCO
+conda install -c bioconda busco
+
+## Execução
+
+### 1. Verificar dados
+python 03-code/collection/02_validate_fasta.py
+
+### 2. Replicar análise estatística
+Rscript 03-code/analysis/01_descriptive_stats.R
+Rscript 03-code/analysis/03_anova_analysis.R
+
+### 3. Gerar figuras
+Rscript 03-code/analysis/06_generate_figures.R
+
+## Citação
+Se utilizar este pacote, por favor cite:
+
+Oliveira, V. S. (2025). Análise Comparativa de Performance e Qualidade: 
+Anotadores Genômicos Web-based versus Desktop em Genomas Bacterianos. 
+Trabalho de Conclusão de Curso, PUC Minas.
+
+## Contato
+- Autor: Vinicius Salles de Oliveira
+- E-mail: vinicius.oliveira.1444802@sga.pucminas.br
+
+## Licença
+MIT License
+```
+
+#### Arquivo de Citação (CITATION.cff)
+
+```yaml
+cff-version: 1.2.0
+message: "Se você usar este trabalho, por favor cite-o conforme abaixo."
+authors:
+- family-names: "Oliveira"
+  given-names: "Vinicius Salles"
+  affiliation: "PUC Minas"
+title: "Análise Comparativa de Anotadores Genômicos Web vs Desktop"
+version: 1.0.0
+date-released: 2025-06-01
+url: "https://github.com/viniciussalles/exp-tcc-annot-2025"
+license: MIT
+type: software
+keywords:
+- bioinformatics
+- genome annotation
+- software comparison
+- benchmark
+```
+
+---
+
+## 19. Plano de comunicação
+
+### 19.1 Públicos e mensagens-chave pré-execução
+
+#### Identificação dos Públicos
+
+| Público | Caracterização | Nível de Interesse |
+|---------|----------------|-------------------|
+| **Orientador** | Prof. Danilo de Quadros Maia Filho - Supervisor acadêmico | Alto |
+| **Coordenação do Curso** | Gestão acadêmica do curso de Engenharia de Software | Médio |
+| **Colegas de Turma** | Outros graduandos de Engenharia de Software | Baixo |
+| **Comunidade Acadêmica** | Pesquisadores e estudantes de bioinformática | Médio |
+| **Desenvolvedores das Ferramentas** | Mantenedores de RAST, DFAST, Prokka | Baixo |
+
+#### Mensagens-Chave por Público
+
+**Orientador (Prof. Danilo Maia)**
+
+| Aspecto | Mensagem |
+|---------|----------|
+| **Objetivo** | Comparar performance e qualidade de ferramentas de anotação genômica web-based vs desktop |
+| **Escopo** | 18 genomas bacterianos, 3 ferramentas (RAST, DFAST, Prokka), 54 sessões experimentais |
+| **Datas** | Execução planejada para semanas 6-10 do cronograma |
+| **Impacto** | Resultados contribuirão para recomendações baseadas em evidências na área de bioinformática |
+| **Progresso** | Atualizações semanais sobre status, riscos e próximos passos |
+
+**Coordenação do Curso**
+
+| Aspecto | Mensagem |
+|---------|----------|
+| **Objetivo** | TCC em Engenharia de Software aplicando métodos estatísticos em bioinformática |
+| **Escopo** | Experimento controlado seguindo metodologia científica |
+| **Datas** | Entrega prevista conforme calendário acadêmico |
+| **Impacto** | Demonstra aplicação interdisciplinar dos conhecimentos do curso |
+
+**Colegas de Turma**
+
+| Aspecto | Mensagem |
+|---------|----------|
+| **Objetivo** | Estudo comparativo de ferramentas de software usando análise estatística |
+| **Escopo** | Benchmark de aplicações web vs desktop no domínio de bioinformática |
+| **Impacto** | Metodologia replicável para outros domínios de software |
+
+**Comunidade Acadêmica**
+
+| Aspecto | Mensagem |
+|---------|----------|
+| **Objetivo** | Benchmark sistemático de RAST, DFAST e Prokka |
+| **Escopo** | Métricas de performance, qualidade e usabilidade |
+| **Impacto** | Dados e scripts disponíveis publicamente para replicação |
+
+#### Matriz de Comunicação por Fase
+
+| Fase | Orientador | Coordenação | Colegas | Comunidade |
+|------|:----------:|:-----------:|:-------:|:----------:|
+| Planejamento | ✅ Detalhado | ❌ | ❌ | ❌ |
+| Preparação | ✅ Detalhado | ❌ | ❌ | ❌ |
+| Piloto | ✅ Detalhado | ❌ | ❌ | ❌ |
+| Execução | ✅ Detalhado | ⚠️ Status geral | ❌ | ❌ |
+| Análise | ✅ Detalhado | ⚠️ Status geral | ❌ | ❌ |
+| Conclusão | ✅ Detalhado | ✅ Entrega | ⚠️ Informal | ✅ Publicação |
+
+**Legenda:** ✅ Comunicação completa | ⚠️ Comunicação resumida | ❌ Não aplicável
+
+---
+
+### 19.2 Canais e frequência de comunicação
+
+#### Canais Disponíveis
+
+| Canal | Tipo | Formalidade | Registro |
+|-------|------|-------------|----------|
+| **E-mail institucional** | Assíncrono | Formal | Automático |
+| **Microsoft Teams/Google Meet** | Síncrono | Semi-formal | Gravação opcional |
+| **Reunião presencial** | Síncrono | Formal | Ata de reunião |
+| **WhatsApp** | Assíncrono | Informal | Manual |
+| **GitHub** | Assíncrono | Técnico | Automático |
+| **SGA PUC Minas** | Assíncrono | Formal | Automático |
+
+#### Matriz Canal x Público
+
+| Canal | Orientador | Coordenação | Colegas | Comunidade |
+|-------|:----------:|:-----------:|:-------:|:----------:|
+| E-mail institucional | ✅ | ✅ | ❌ | ❌ |
+| Teams/Meet | ✅ | ❌ | ❌ | ❌ |
+| Reunião presencial | ✅ | ❌ | ❌ | ❌ |
+| WhatsApp | ✅ | ❌ | ⚠️ | ❌ |
+| GitHub | ⚠️ | ❌ | ⚠️ | ✅ |
+| SGA PUC Minas | ❌ | ✅ | ❌ | ❌ |
+
+#### Frequência de Comunicação
+
+**Com o Orientador**
+
+| Tipo de Comunicação | Canal | Frequência | Dia/Horário |
+|---------------------|-------|------------|-------------|
+| Status semanal | E-mail | Semanal | Segunda-feira |
+| Reunião de orientação | Teams/Presencial | Semanal ou quinzenal | A combinar |
+| Dúvidas pontuais | WhatsApp/E-mail | Sob demanda | Horário comercial |
+| Entrega de artefatos | E-mail | Por marco | Conforme cronograma |
+
+**Com a Coordenação**
+
+| Tipo de Comunicação | Canal | Frequência | Dia/Horário |
+|---------------------|-------|------------|-------------|
+| Status do TCC | SGA | Por marco | Conforme calendário |
+| Entrega final | SGA | Única | Prazo final |
+
+**Com a Comunidade**
+
+| Tipo de Comunicação | Canal | Frequência | Momento |
+|---------------------|-------|------------|---------|
+| Publicação do repositório | GitHub | Única | Após conclusão |
+| Disponibilização de dados | GitHub/Zenodo | Única | Após conclusão |
+
+#### Calendário Semanal de Comunicações
+
+| Dia | Atividade | Canal | Destinatário |
+|-----|-----------|-------|--------------|
+| Segunda | Envio de status semanal | E-mail | Orientador |
+| Quarta | Reunião de orientação (quando agendada) | Teams/Presencial | Orientador |
+| Sexta | Commit semanal e atualização do repositório | GitHub | Público |
+
+---
+
+### 19.3 Pontos de comunicação obrigatórios
+
+#### Lista de Eventos com Comunicação Obrigatória
+
+| ID | Evento | Criticidade | Destinatário | Canal | Prazo |
+|----|--------|-------------|--------------|-------|-------|
+| COM-01 | Aprovação do plano de experimento | Alta | Orientador | E-mail + Reunião | Imediato |
+| COM-02 | Conclusão da configuração do ambiente | Média | Orientador | E-mail | 24 horas |
+| COM-03 | Conclusão do estudo piloto | Alta | Orientador | E-mail | 24 horas |
+| COM-04 | Decisão Go/No-Go | Alta | Orientador | Reunião | Antes de prosseguir |
+| COM-05 | Início da execução principal | Alta | Orientador | E-mail | No dia |
+| COM-06 | Problema crítico identificado | Alta | Orientador | WhatsApp + E-mail | Imediato |
+| COM-07 | 50% da coleta concluída | Média | Orientador | E-mail | 24 horas |
+| COM-08 | Conclusão da coleta de dados | Alta | Orientador | E-mail | 24 horas |
+| COM-09 | Resultados preliminares disponíveis | Média | Orientador | E-mail + Reunião | 48 horas |
+| COM-10 | Solicitação de mudança no escopo | Alta | Orientador | E-mail + Reunião | Antes de implementar |
+| COM-11 | Atraso significativo (>1 semana) | Alta | Orientador | Reunião | Imediato |
+| COM-12 | TCC pronto para revisão | Alta | Orientador | E-mail | 1 semana antes da entrega |
+| COM-13 | Entrega final do TCC | Alta | Coordenação | SGA | No prazo |
+| COM-14 | Publicação do repositório | Baixa | Comunidade | GitHub | Após aprovação |
+
+#### Detalhamento dos Pontos Críticos
+
+**COM-01: Aprovação do Plano**
+
+| Campo | Valor |
+|-------|-------|
+| **Trigger** | Documento do plano finalizado |
+| **Conteúdo** | Plano completo em PDF/MD para revisão |
+| **Ação esperada** | Feedback e aprovação formal do orientador |
+| **Registro** | E-mail de aprovação arquivado |
+
+**COM-04: Decisão Go/No-Go**
+
+| Campo | Valor |
+|-------|-------|
+| **Trigger** | Piloto concluído e checklist 100% completo |
+| **Conteúdo** | Relatório de prontidão + resultados do piloto |
+| **Ação esperada** | Autorização formal para iniciar execução |
+| **Registro** | E-mail ou ata de reunião com decisão |
+
+**COM-06: Problema Crítico**
+
+| Campo | Valor |
+|-------|-------|
+| **Trigger** | Qualquer evento que impeça continuidade ou comprometa resultados |
+| **Conteúdo** | Descrição do problema, impacto, opções de resolução |
+| **Ação esperada** | Orientação sobre como proceder |
+| **Registro** | E-mail documentando problema e solução |
+
+**COM-10: Mudança no Escopo**
+
+| Campo | Valor |
+|-------|-------|
+| **Trigger** | Necessidade de alterar design, amostra ou métricas |
+| **Conteúdo** | Proposta formal de mudança com justificativa |
+| **Ação esperada** | Aprovação ou rejeição da mudança |
+| **Registro** | E-mail com decisão e atualização do plano |
+
+#### Templates de Comunicação
+
+**Template: E-mail de Status Semanal**
+```
+Assunto: [EXP-TCC-ANNOT] Status Semanal - Semana XX
+
+Prezado Prof. Danilo,
+
+Segue o status semanal do experimento:
+
+RESUMO
+
+Status geral: ✅ No prazo / ⚠️ Atenção / ❌ Atrasado
+Sessões concluídas: XX de 54 (XX%)
+ATIVIDADES REALIZADAS
+
+[Atividade 1]
+[Atividade 2]
+[Atividade 3]
+PRÓXIMOS PASSOS
+
+[Próximo passo 1]
+[Próximo passo 2]
+RISCOS E IMPEDIMENTOS
+
+[Risco/Impedimento ou "Nenhum identificado"]
+DECISÕES NECESSÁRIAS
+
+[Decisão ou "Nenhuma no momento"]
+Atenciosamente, Vinicius Salles de Oliveira
+```
+
+**Template: Notificação de Problema Crítico**
+
+```
+Assunto: [URGENTE] [EXP-TCC-ANNOT] Problema Crítico
+
+Prezado Prof. Danilo,
+
+Identificado problema crítico:
+
+DESCRIÇÃO DO PROBLEMA [Descrição detalhada do que aconteceu]
+
+IMPACTO
+
+Cronograma: [Impacto]
+Dados: [Impacto]
+Qualidade: [Impacto]
+AÇÕES JÁ TOMADAS
+
+[Ação 1]
+[Ação 2]
+OPÇÕES DE RESOLUÇÃO
+
+[Opção A - descrição e implicações]
+[Opção B - descrição e implicações]
+RECOMENDAÇÃO [Sua recomendação justificada]
+
+Aguardo orientação sobre como proceder.
+
+Atenciosamente, Vinicius Salles de Oliveira Telefone: [número para contato urgente]
+```
+
+**Template: Solicitação de Mudança**
+
+```
+Assunto: [EXP-TCC-ANNOT] Solicitação de Mudança - [Descrição breve]
+
+Prezado Prof. Danilo,
+
+Solicito aprovação para a seguinte mudança no experimento:
+
+MUDANÇA PROPOSTA [Descrição clara do que se deseja mudar]
+
+SITUAÇÃO ATUAL [Como está atualmente]
+
+SITUAÇÃO PROPOSTA [Como ficará após a mudança]
+
+JUSTIFICATIVA [Por que a mudança é necessária]
+
+IMPACTO
+
+No cronograma: [Impacto]
+No escopo: [Impacto]
+Na qualidade: [Impacto]
+Nos resultados: [Impacto]
+CLASSIFICAÇÃO [ ] Mudança menor (não afeta design) [ ] Mudança moderada (afeta execução) [ ] Mudança maior (afeta design/escopo)
+
+Aguardo aprovação para implementar.
+
+Atenciosamente, Vinicius Salles de Oliveira
+```
+
+---
+
+## 20. Critérios de prontidão para execução (Definition of Ready)
+
+### 20.1 Checklist de prontidão (itens que devem estar completos)
+
+#### A. Documentação
+
+| # | Item | Critério de Aceitação | Status |
+|---|------|----------------------|--------|
+| A1 | Plano do experimento | Versão final aprovada pelo orientador | ⬜ |
+| A2 | Protocolo operacional | Detalhado, sem ambiguidades, revisado | ⬜ |
+| A3 | Checklist pré-sessão | PDF pronto, testado no piloto | ⬜ |
+| A4 | Checklist pós-sessão | PDF pronto, testado no piloto | ⬜ |
+| A5 | Guia rápido RAST | Documento pronto e validado | ⬜ |
+| A6 | Guia rápido DFAST | Documento pronto e validado | ⬜ |
+| A7 | Guia rápido Prokka | Documento pronto e validado | ⬜ |
+| A8 | Template de registro de dados | Planilha com todas as colunas | ⬜ |
+| A9 | Matriz de randomização | Ordem de execução definida | ⬜ |
+
+#### B. Infraestrutura
+
+| # | Item | Critério de Aceitação | Status |
+|---|------|----------------------|--------|
+| B1 | Hardware funcional | PC operacional, sem problemas | ⬜ |
+| B2 | Windows 11 | Atualizado, updates pausados | ⬜ |
+| B3 | WSL2 | Ubuntu instalado e funcional | ⬜ |
+| B4 | Conexão internet | Testada, velocidade >100 Mbps | ⬜ |
+| B5 | Espaço em disco | Mínimo 50 GB livres | ⬜ |
+| B6 | Sistema de backup | Configurado e testado | ⬜ |
+| B7 | No-break/Estabilizador | Proteção contra queda de energia | ⬜ |
+
+#### C. Software
+
+| # | Item | Critério de Aceitação | Status |
+|---|------|----------------------|--------|
+| C1 | Python 3.11+ | Instalado com todas as bibliotecas | ⬜ |
+| C2 | R 4.3+ | Instalado com todos os pacotes | ⬜ |
+| C3 | Prokka | Instalado no WSL2, teste OK | ⬜ |
+| C4 | BUSCO | Instalado, banco bacteria_odb10 OK | ⬜ |
+| C5 | Git | Configurado, repositório criado | ⬜ |
+| C6 | Scripts de coleta | Desenvolvidos e testados | ⬜ |
+| C7 | Scripts de análise | Desenvolvidos e testados | ⬜ |
+| C8 | Monitor de recursos | Configurado e calibrado | ⬜ |
+
+#### D. Dados
+
+| # | Item | Critério de Aceitação | Status |
+|---|------|----------------------|--------|
+| D1 | Genomas da amostra | 18 arquivos FASTA baixados | ⬜ |
+| D2 | Genomas do piloto | 3 arquivos FASTA baixados | ⬜ |
+| D3 | Verificação de integridade | MD5 conferido para todos | ⬜ |
+| D4 | Metadados documentados | Tabela completa com informações | ⬜ |
+
+#### E. Acessos
+
+| # | Item | Critério de Aceitação | Status |
+|---|------|----------------------|--------|
+| E1 | Conta RAST | Criada, login OK, submissão teste OK | ⬜ |
+| E2 | Conta DFAST | Criada, login OK, submissão teste OK | ⬜ |
+| E3 | Repositório GitHub | Criado, estrutura definida | ⬜ |
+| E4 | Backup na nuvem | Google Drive ou OneDrive configurado | ⬜ |
+
+#### F. Validação (Piloto)
+
+| # | Item | Critério de Aceitação | Status |
+|---|------|----------------------|--------|
+| F1 | Piloto executado | 9 sessões completas (3 genomas × 3 ferramentas) | ⬜ |
+| F2 | Dados do piloto válidos | Todas as métricas coletadas corretamente | ⬜ |
+| F3 | Problemas identificados | Lista documentada de issues encontrados | ⬜ |
+| F4 | Ajustes implementados | Correções aplicadas e testadas | ⬜ |
+| F5 | Relatório do piloto | Documento completo e revisado | ⬜ |
+
+#### G. Aprovações
+
+| # | Item | Critério de Aceitação | Status |
+|---|------|----------------------|--------|
+| G1 | Plano aprovado | E-mail de aprovação do orientador | ⬜ |
+| G2 | Piloto aprovado | Feedback positivo do orientador | ⬜ |
+| G3 | Go/No-Go | Decisão formal de prosseguir | ⬜ |
+
+#### Resumo do Checklist
+
+| Categoria | Itens | Completos | % |
+|-----------|:-----:|:---------:|:-:|
+| A. Documentação | 9 | 0 | 0% |
+| B. Infraestrutura | 7 | 0 | 0% |
+| C. Software | 8 | 0 | 0% |
+| D. Dados | 4 | 0 | 0% |
+| E. Acessos | 4 | 0 | 0% |
+| F. Validação | 5 | 0 | 0% |
+| G. Aprovações | 3 | 0 | 0% |
+| **TOTAL** | **40** | **0** | **0%** |
+
+#### Critério de Prontidão
+
+| Condição | Requisito |
+|----------|-----------|
+| **Mínimo para GO** | 100% dos itens completos (40/40) |
+| **GO Condicional** | ≥95% completos, sem itens críticos pendentes |
+| **NO-GO** | <95% completos OU qualquer item crítico pendente |
+
+#### Itens Críticos (Bloqueantes)
+
+Os seguintes itens são **bloqueantes** - se não estiverem completos, o experimento **não pode iniciar**:
+
+- A1: Plano aprovado
+- B1: Hardware funcional
+- B4: Conexão internet
+- C3: Prokka funcional
+- D1: Genomas baixados
+- E1: Conta RAST
+- E2: Conta DFAST
+- F1: Piloto executado
+- G3: Decisão Go/No-Go
+
+---
+
+### 20.2 Aprovações finais para iniciar a operação
+
+#### Autoridades Aprovadoras
+
+| Nível | Responsável | Papel | Contato |
+|-------|-------------|-------|---------|
+| **Técnico** | Vinicius Salles de Oliveira | Pesquisador Principal | vinicius.oliveira.1444802@sga.pucminas.br |
+| **Acadêmico** | Prof. Danilo de Quadros Maia Filho | Orientador | 1514571@sga.pucminas.br |
+
+#### Fluxo de Aprovação
+
+| Etapa | Responsável | Ação | Entregável |
+|-------|-------------|------|------------|
+| 1 | Pesquisador | Completar 100% do checklist | Checklist preenchido |
+| 2 | Pesquisador | Elaborar Relatório de Prontidão | Documento PDF |
+| 3 | Pesquisador | Enviar para aprovação | E-mail formal |
+| 4 | Orientador | Revisar documentação | - |
+| 5 | Orientador | Emitir parecer | E-mail de GO/NO-GO |
+| 6 | Pesquisador | Registrar decisão | Log atualizado |
+| 7 | Pesquisador | Iniciar execução (se GO) | Primeira sessão |
+
+#### Formulário de Solicitação de GO
+
+```
+══════════════════════════════════════════════════════════════════ SOLICITAÇÃO DE APROVAÇÃO PARA EXECUÇÃO EXP-TCC-ANNOT-2025-002 ══════════════════════════════════════════════════════════════════
+
+DATA: //2025
+
+SOLICITANTE Nome: Vinicius Salles de Oliveira E-mail: vinicius.oliveira.1444802@sga.pucminas.br
+
+────────────────────────────────────────────────────────────────── STATUS DO CHECKLIST ──────────────────────────────────────────────────────────────────
+
+Documentação: [ ] Completo (9/9) [ ] Incompleto (/9) Infraestrutura: [ ] Completo (7/7) [ ] Incompleto (/7) Software: [ ] Completo (8/8) [ ] Incompleto (/8) Dados: [ ] Completo (4/4) [ ] Incompleto (/4) Acessos: [ ] Completo (4/4) [ ] Incompleto (/4) Validação (Piloto): [ ] Completo (5/5) [ ] Incompleto (/5) Aprovações prévias: [ ] Completo (2/3) [ ] Incompleto (___/3)
+
+TOTAL: /40 itens completos (%)
+
+────────────────────────────────────────────────────────────────── RESULTADOS DO PILOTO ──────────────────────────────────────────────────────────────────
+
+Genomas testados: [ ] P1 - Lactobacillus acidophilus [ ] P2 - Vibrio cholerae [ ] P3 - Myxococcus xanthus
+
+Ferramentas testadas: [ ] RAST - Sessões: ___ | Sucesso: ___ [ ] DFAST - Sessões: ___ | Sucesso: ___ [ ] Prokka - Sessões: ___ | Sucesso: ___
+
+Taxa de sucesso geral: ____%
+
+Problemas encontrados:
+
+Ajustes realizados:
+
+────────────────────────────────────────────────────────────────── RISCOS RESIDUAIS ──────────────────────────────────────────────────────────────────
+
+[ ] Nenhum risco residual identificado
+
+[ ] Riscos identificados (listar):
+
+────────────────────────────────────────────────────────────────── CRONOGRAMA PROPOSTO ──────────────────────────────────────────────────────────────────
+
+Data proposta para início: //2025 Previsão de conclusão da coleta: //2025 Sessões por dia planejadas: ___
+
+────────────────────────────────────────────────────────────────── DECLARAÇÃO DO PESQUISADOR ──────────────────────────────────────────────────────────────────
+
+Declaro que: [ ] Todos os itens do checklist foram verificados pessoalmente [ ] O estudo piloto foi executado conforme protocolo [ ] Os ajustes necessários foram implementados [ ] O experimento está pronto para a fase de execução principal
+
+Assinatura: ___________________________ Data: //2025
+
+══════════════════════════════════════════════════════════════════ DECISÃO DO ORIENTADOR ══════════════════════════════════════════════════════════════════
+
+[ ] GO Experimento aprovado para iniciar em //2025
+
+[ ] GO CONDICIONAL Aprovado mediante cumprimento de:
+
+Prazo para regularização: //2025
+
+[ ] NO-GO Não aprovado pelos seguintes motivos:
+
+Nova avaliação em: //2025
+
+OBSERVAÇÕES:
+
+Assinatura: ___________________________ Data: //2025 Prof. Danilo de Quadros Maia Filho Orientador
+
+══════════════════════════════════════════════════════════════════
+```
+
+#### Registro da Decisão
+
+| Campo | Preenchimento |
+|-------|---------------|
+| **ID do Experimento** | EXP-TCC-ANNOT-2025-002 |
+| **Data da Solicitação** | ___/___/2025 |
+| **Data da Decisão** | ___/___/2025 |
+| **Decisão** | ⬜ GO / ⬜ GO Condicional / ⬜ NO-GO |
+| **Condições (se aplicável)** | |
+| **Autoridade** | Prof. Danilo de Quadros Maia Filho |
+| **Meio de Registro** | ⬜ E-mail / ⬜ Documento assinado / ⬜ Teams |
+| **Referência** | (ID do e-mail ou documento) |
+| **Data de Início Autorizada** | ___/___/2025 |
+
+#### Pós-Aprovação
+
+Após receber o **GO**, o pesquisador deve:
+
+| # | Ação | Prazo |
+|---|------|-------|
+| 1 | Registrar decisão no log do projeto | Imediato |
+| 2 | Atualizar status no repositório GitHub | 24 horas |
+| 3 | Confirmar data de início por e-mail | 24 horas |
+| 4 | Preparar ambiente para primeira sessão | Antes do início |
+| 5 | Executar primeira sessão experimental | Data autorizada |
+| 6 | Reportar conclusão da primeira sessão | Até 24h após |
