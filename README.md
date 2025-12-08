@@ -11,7 +11,7 @@ Análise Comparativa de Performance e Qualidade de Software: Anotadores Genômic
 
 ### 1.2 ID / código
 
-EXP-TCC-ANNOT-2025-003
+EXP-TCC-ANNOT-2025-004
 
 ---
 
@@ -21,6 +21,7 @@ EXP-TCC-ANNOT-2025-003
 - **v2.0** (22/11/2025): Definiçao de Escopo, Objetivo
 - **v2.5** (23/11/2025): Definiçao de Stakeholders/Impacto, Riscos de alto nível, premissas e critérios de sucesso
 - **v3.0** (28/11/2025): Modelo conceitual e hipóteses; Variáveis, fatores, tratamentos e objetos de estudo; Desenho experimental
+- **v4.0** (02/12/2025): População, sujeitos e amostragem; Instrumentação e protocolo operacional; Plano de análise de dados (pré-execução)
 
 ---
     
@@ -28,7 +29,7 @@ EXP-TCC-ANNOT-2025-003
 
 - **Data de criação:** 21/11/2025
     
-- **Última atualização:** 30/11/2025
+- **Última atualização:** 02/12/2025
     
 ---
 
@@ -846,3 +847,475 @@ Total: 54 execuções experimentais (18 genomas × 3 ferramentas)
 - Correlações entre métricas de qualidade e performance
 
 ---
+
+## 10. População, sujeitos e amostragem
+
+### 10.1 População-alvo
+
+A população-alvo deste experimento compreende **genomas bacterianos completos** disponíveis em repositórios públicos de bioinformática, especificamente:
+
+**População primária (objetos de estudo):**
+- Genomas bacterianos completos depositados no NCBI RefSeq
+- Organismos procarióticos com genoma circular ou linear completamente sequenciado
+- Representantes de diferentes filos bacterianos com relevância científica ou clínica
+
+**População secundária (contexto de uso):**
+- Pesquisadores e estudantes de bioinformática que utilizam ferramentas de anotação genômica
+- Laboratórios acadêmicos com infraestrutura computacional típica (desktop/workstation)
+- Projetos de genômica bacteriana em instituições de ensino superior
+
+---
+
+### 10.2 Critérios de inclusão de sujeitos
+
+#### Para os genomas (objetos de estudo):
+
+| Critério | Especificação |
+|----------|---------------|
+| **Status de montagem** | Genoma completo (Complete Genome) |
+| **Qualidade** | N50 > 50 kb, sem contigs fragmentados |
+| **Formato** | Arquivo FASTA disponível no NCBI RefSeq |
+| **Organismo** | Bactéria (domínio Bacteria) |
+| **Tamanho** | Entre 0,5 Mb e 12 Mb |
+| **Anotação de referência** | Possuir anotação oficial do NCBI para validação |
+| **Acessibilidade** | Disponível publicamente sem restrições de uso |
+
+#### Para o operador do experimento:
+
+| Critério | Especificação |
+|----------|---------------|
+| **Formação** | Graduando ou graduado em área de TI ou Biológicas |
+| **Conhecimento técnico** | Familiaridade com linha de comando (terminal) |
+| **Disponibilidade** | Mínimo de 20 horas semanais para o experimento |
+| **Acesso** | Disponibilidade do hardware especificado |
+
+---
+
+### 10.3 Critérios de exclusão de sujeitos
+
+#### Para os genomas:
+
+| Critério de Exclusão | Justificativa |
+|---------------------|---------------|
+| Genomas em draft (rascunho) | Qualidade inconsistente pode afetar resultados |
+| Genomas de plasmídeos isolados | Não representam genoma completo |
+| Genomas de archaea ou eucariotos | Fora do escopo das ferramentas testadas |
+| Genomas com contaminação reportada | Dados não confiáveis |
+| Genomas menores que 0,5 Mb | Podem ser genomas incompletos ou endossimbiontes |
+| Genomas maiores que 12 Mb | Raros em bactérias, possível contaminação |
+| Genomas sem anotação de referência | Impossibilidade de validação |
+
+#### Para o operador:
+
+| Critério de Exclusão | Justificativa |
+|---------------------|---------------|
+| Envolvimento no desenvolvimento das ferramentas | Conflito de interesse |
+| Falta de acesso estável à internet | Impossibilidade de testar ferramentas web |
+| Incapacidade de completar treinamento prévio | Risco de erros operacionais |
+
+---
+
+### 10.4 Tamanho da amostra planejado (por grupo)
+
+**Tamanho total da amostra:** 18 genomas bacterianos
+
+**Distribuição por grupo:**
+
+| Grupo | Tamanho do Genoma | Quantidade | Justificativa |
+|-------|-------------------|------------|---------------|
+| Grupo 1 | Pequeno (<2 Mb) | 6 genomas | Representar organismos minimalistas |
+| Grupo 2 | Médio (2-5 Mb) | 6 genomas | Faixa mais comum em bactérias |
+| Grupo 3 | Grande (>5 Mb) | 6 genomas | Representar organismos complexos |
+
+**Justificativa estatística:**
+- **Poder estatístico:** Com 6 réplicas por grupo e α=0,05, obtém-se poder de 0,80 para detectar efeitos grandes (d=0,8)
+- **Análise de poder:** Calculado usando G*Power para ANOVA de medidas repetidas
+- **Margem de segurança:** 18 genomas permitem até 3 exclusões mantendo poder adequado
+- **Viabilidade:** Quantidade executável no prazo de 16 semanas
+
+**Total de observações:** 54 (18 genomas × 3 ferramentas)
+
+---
+
+### 10.5 Método de seleção / recrutamento
+
+**Método:** Amostragem estratificada por conveniência
+
+**Procedimento de seleção:**
+
+1. **Consulta ao NCBI RefSeq:**
+- Acesso ao banco de dados de genomas bacterianos
+- Filtro por "Complete Genome"
+- Ordenação por data de depósito (mais recentes)
+
+2. **Estratificação por tamanho:**
+- Separação em três faixas de tamanho
+- Seleção de 6 genomas por faixa
+
+3. **Critérios de diversidade:**
+- Máximo de 2 genomas do mesmo gênero
+- Representação de pelo menos 4 filos diferentes
+- Balanceamento de conteúdo GC (baixo, médio, alto)
+
+4. **Validação final:**
+- Verificação de disponibilidade dos arquivos
+- Confirmação de qualidade da montagem
+- Documentação dos metadados
+
+**Genomas pré-selecionados:**
+
+| ID | Organismo | Tamanho | Categoria | RefSeq |
+|----|-----------|---------|-----------|--------|
+| G1 | *Mycoplasma genitalium* | 0,58 Mb | Pequeno | NC_000908.2 |
+| G2 | *Chlamydia trachomatis* | 1,04 Mb | Pequeno | NC_000117.1 |
+| G3 | *Rickettsia prowazekii* | 1,11 Mb | Pequeno | NC_000963.1 |
+| G4 | *Helicobacter pylori* | 1,67 Mb | Pequeno | NC_000915.1 |
+| G5 | *Treponema pallidum* | 1,14 Mb | Pequeno | NC_021490.2 |
+| G6 | *Borrelia burgdorferi* | 0,91 Mb | Pequeno | NC_001318.1 |
+| G7 | *Escherichia coli* K-12 | 4,64 Mb | Médio | NC_000913.3 |
+| G8 | *Bacillus subtilis* 168 | 4,21 Mb | Médio | NC_000964.3 |
+| G9 | *Pseudomonas aeruginosa* | 6,26 Mb | Médio | NC_002516.2 |
+| G10 | *Staphylococcus aureus* | 2,82 Mb | Médio | NC_007795.1 |
+| G11 | *Salmonella enterica* | 4,88 Mb | Médio | NC_003197.2 |
+| G12 | *Mycobacterium tuberculosis* | 4,41 Mb | Médio | NC_000962.3 |
+| G13 | *Streptomyces coelicolor* | 8,67 Mb | Grande | NC_003888.3 |
+| G14 | *Bradyrhizobium japonicum* | 9,10 Mb | Grande | NC_004463.1 |
+| G15 | *Sorangium cellulosum* | 13,03 Mb | Grande | NC_010162.1 |
+| G16 | *Rhodococcus jostii* | 9,70 Mb | Grande | NC_008268.1 |
+| G17 | *Burkholderia xenovorans* | 9,73 Mb | Grande | NC_007951.1 |
+| G18 | *Nocardia farcinica* | 6,29 Mb | Grande | NC_006361.1 |
+
+---
+
+### 10.6 Treinamento e preparação dos sujeitos
+
+**Treinamento do operador (pesquisador principal):**
+
+| Fase | Conteúdo | Duração | Método |
+|------|----------|---------|--------|
+| **Fase 1** | Fundamentos de anotação genômica | 4 horas | Estudo dirigido + tutoriais online |
+| **Fase 2** | Operação do RAST | 2 horas | Tutorial oficial + prática |
+| **Fase 3** | Operação do DFAST | 2 horas | Tutorial oficial + prática |
+| **Fase 4** | Operação do Prokka | 3 horas | Documentação + instalação + prática |
+| **Fase 5** | Scripts de automação | 4 horas | Desenvolvimento e teste |
+| **Fase 6** | Ferramentas de monitoramento | 2 horas | Configuração e calibração |
+| **Fase 7** | Estudo piloto | 8 horas | Execução completa com 3 genomas |
+
+**Materiais de preparação:**
+- Documentação oficial de cada ferramenta
+- Artigos científicos de referência (Seemann, 2014; Aziz et al., 2008; Tanizawa et al., 2018)
+- Checklist de verificação pré-experimento
+- Scripts de automação documentados
+- Vídeos tutoriais gravados pelo pesquisador
+
+**Critérios de conclusão do treinamento:**
+- Execução bem-sucedida de anotação em cada ferramenta
+- Compreensão dos formatos de saída (GFF, GenBank, FASTA)
+- Capacidade de interpretar logs de erro
+- Familiaridade com scripts de coleta de métricas
+
+---
+
+## 11. Instrumentação e protocolo operacional
+
+### 11.1 Instrumentos de coleta (questionários, logs, planilhas, etc.)
+
+#### Tabela de Instrumentos de Coleta
+
+| ID | Instrumento | Tipo | Descrição | Variáveis Coletadas |
+|----|-------------|------|-----------|---------------------|
+| I1 | **Script de Cronometragem** | Python | Registra timestamps de início/fim de cada execução | M1 (Tempo total), M2 (Overhead) |
+| I2 | **Monitor de Sistema** | PowerShell/Python | Captura uso de CPU e RAM em intervalos de 5s | M4 (CPU), M5 (RAM) |
+| I3 | **Parser de Resultados** | Python | Extrai contagens de features dos arquivos GFF/GenBank | M6 (CDS), M7 (RNAs) |
+| I4 | **Planilha de Registro** | Excel/CSV | Registro manual de observações e incidentes | Todas |
+| I5 | **Log de Execução** | TXT | Saída padrão e erros de cada ferramenta | M18 (Sucesso), M19 (Falhas) |
+| I6 | **BUSCO** | Software | Avaliação de completude das anotações | M10 (Score BUSCO) |
+| I7 | **Checklist de Sessão** | Google Forms | Registro estruturado de cada sessão experimental | Metadados |
+| I8 | **Script de Comparação** | Python | Calcula concordância entre anotações | M8 (Kappa), M9 (Sobreposição) |
+| I9 | **Monitor de Rede** | Wireshark/NetLimiter | Registra latência e throughput de rede | M2 (Overhead de rede) |
+| I10 | **Repositório Git** | GitHub | Versionamento de scripts e dados | Backup, reprodutibilidade |
+
+---
+
+### 11.2 Materiais de suporte (instruções, guias)
+
+#### Lista de Materiais de Suporte
+
+| ID | Material | Formato | Conteúdo | Destinatário |
+|----|----------|---------|----------|--------------|
+| S1 | **Manual do Experimento** | PDF | Procedimentos detalhados, troubleshooting | Operador |
+| S2 | **Guia Rápido RAST** | PDF (2 páginas) | Passo a passo de submissão e download | Operador |
+| S3 | **Guia Rápido DFAST** | PDF (2 páginas) | Passo a passo de submissão e download | Operador |
+| S4 | **Guia Rápido Prokka** | PDF (2 páginas) | Comandos e parâmetros essenciais | Operador |
+| S5 | **Checklist Pré-Sessão** | PDF (1 página) | Verificações antes de cada execução | Operador |
+| S6 | **Checklist Pós-Sessão** | PDF (1 página) | Verificações após cada execução | Operador |
+| S7 | **Glossário de Termos** | PDF | Definições de termos técnicos | Operador |
+| S8 | **FAQ de Problemas Comuns** | PDF | Soluções para erros frequentes | Operador |
+| S9 | **Template de Relatório** | Word/MD | Estrutura para documentar resultados | Operador |
+| S10 | **README dos Scripts** | Markdown | Documentação técnica dos scripts | Operador/Replicadores |
+
+---
+
+### 11.3 Procedimento experimental (protocolo – visão passo a passo)
+
+#### Fluxograma do Experimento
+
+#### Protocolo Detalhado Passo a Passo
+
+**FASE 1: PREPARAÇÃO (Semanas 1-2)**
+
+| Passo | Ação | Responsável | Duração | Entregável |
+|-------|------|-------------|---------|------------|
+| 1.1 | Download dos 18 genomas do NCBI RefSeq | Operador | 2 horas | Arquivos FASTA |
+| 1.2 | Verificação de integridade (MD5) | Operador | 30 min | Log de verificação |
+| 1.3 | Instalação do Prokka via WSL2 | Operador | 3 horas | Prokka funcional |
+| 1.4 | Criação de conta no RAST | Operador | 15 min | Credenciais |
+| 1.5 | Criação de conta no DFAST | Operador | 15 min | Credenciais |
+| 1.6 | Desenvolvimento de scripts de automação | Operador | 8 horas | Scripts testados |
+| 1.7 | Configuração de monitores de sistema | Operador | 2 horas | Monitores calibrados |
+| 1.8 | Randomização da ordem de execução | Operador | 1 hora | Matriz randomizada |
+| 1.9 | Revisão do protocolo com orientador | Orientador | 2 horas | Protocolo aprovado |
+
+**FASE 2: ESTUDO PILOTO (Semana 3)**
+
+| Passo | Ação | Responsável | Duração | Entregável |
+|-------|------|-------------|---------|------------|
+| 2.1 | Seleção de 3 genomas piloto (fora da amostra) | Operador | 30 min | Lista de genomas |
+| 2.2 | Execução completa com genoma piloto 1 | Operador | 4 horas | Dados piloto |
+| 2.3 | Execução completa com genoma piloto 2 | Operador | 4 horas | Dados piloto |
+| 2.4 | Execução completa com genoma piloto 3 | Operador | 4 horas | Dados piloto |
+| 2.5 | Análise dos resultados piloto | Operador | 4 horas | Relatório piloto |
+| 2.6 | Ajustes no protocolo | Operador | 4 horas | Protocolo revisado |
+| 2.7 | Aprovação para execução principal | Orientador | 1 hora | Go/No-Go |
+
+**FASE 3: EXECUÇÃO PRINCIPAL (Semanas 4-6)**
+
+| Passo | Ação | Responsável | Duração | Entregável |
+|-------|------|-------------|---------|------------|
+| 3.1 | Execução do Checklist Pré-Sessão | Operador | 10 min | Checklist preenchido |
+| 3.2 | Limpeza de cache e reinício do sistema | Operador | 5 min | Sistema limpo |
+| 3.3 | Iniciar scripts de monitoramento | Operador | 2 min | Monitores ativos |
+| 3.4 | Iniciar cronômetro | Operador | 1 min | Timer iniciado |
+| 3.5 | Submeter genoma à ferramenta | Operador | 5-10 min | Submissão confirmada |
+| 3.6 | Aguardar processamento | Operador | 5-120 min | Processamento concluído |
+| 3.7 | Parar cronômetro | Operador | 1 min | Tempo registrado |
+| 3.8 | Download/coleta dos resultados | Operador | 5 min | Arquivos de saída |
+| 3.9 | Execução do Checklist Pós-Sessão | Operador | 10 min | Checklist preenchido |
+| 3.10 | Registro na planilha de dados | Operador | 5 min | Dados registrados |
+| 3.11 | Backup no repositório Git | Operador | 2 min | Commit realizado |
+| 3.12 | Intervalo entre sessões | Operador | 30 min | Descanso |
+
+**FASE 4: PÓS-PROCESSAMENTO (Semana 7)**
+
+| Passo | Ação | Responsável | Duração | Entregável |
+|-------|------|-------------|---------|------------|
+| 4.1 | Execução do BUSCO em todas as anotações | Operador | 8 horas | Scores BUSCO |
+| 4.2 | Cálculo de concordância entre ferramentas | Operador | 4 horas | Índices Kappa |
+| 4.3 | Consolidação de todos os dados | Operador | 4 horas | Dataset unificado |
+| 4.4 | Verificação de dados faltantes | Operador | 2 horas | Relatório de qualidade |
+| 4.5 | Tratamento de outliers | Operador | 2 horas | Dataset limpo |
+
+**FASE 5: ANÁLISE (Semanas 8-9)**
+
+| Passo | Ação | Responsável | Duração | Entregável |
+|-------|------|-------------|---------|------------|
+| 5.1 | Análise estatística descritiva | Operador | 8 horas | Tabelas e gráficos |
+| 5.2 | Testes de hipóteses (ANOVA) | Operador | 8 horas | Resultados estatísticos |
+| 5.3 | Interpretação dos resultados | Operador/Orientador | 8 horas | Discussão |
+| 5.4 | Redação do relatório final | Operador | 16 horas | Documento final |
+| 5.5 | Revisão pelo orientador | Orientador | 4 horas | Feedback |
+| 5.6 | Publicação no repositório | Operador | 2 horas | Repositório público |
+
+---
+
+### 11.4 Plano de piloto (se haverá piloto, escopo e critérios de ajuste)
+
+**Haverá estudo piloto:** Sim
+
+**Escopo do piloto:**
+- 3 genomas de teste (1 pequeno, 1 médio, 1 grande)
+- Genomas diferentes dos 18 da amostra principal
+- Execução completa do protocolo em todas as 3 ferramentas
+- Duração estimada: 3 dias
+
+**Objetivos do piloto:**
+1. Validar o funcionamento dos scripts de automação
+2. Calibrar tempos estimados para cada etapa
+3. Identificar problemas técnicos não previstos
+4. Treinar o operador no protocolo completo
+5. Verificar adequação dos instrumentos de coleta
+
+**Genomas do piloto:**
+
+| ID | Organismo | Tamanho | Categoria |
+|----|-----------|---------|-----------|
+| P1 | *Lactobacillus acidophilus* | 1,99 Mb | Pequeno |
+| P2 | *Vibrio cholerae* | 4,03 Mb | Médio |
+| P3 | *Myxococcus xanthus* | 9,14 Mb | Grande |
+
+**Critérios de ajuste permitidos após o piloto:**
+
+| Aspecto | Ajuste Permitido | Ajuste Não Permitido |
+|---------|------------------|----------------------|
+| **Tempo estimado** | Recalcular baseado no piloto | - |
+| **Scripts** | Corrigir bugs, otimizar | Mudar métricas coletadas |
+| **Ordem de execução** | Ajustar intervalos | Mudar randomização |
+| **Instrumentos** | Adicionar campos na planilha | Remover variáveis |
+| **Protocolo** | Clarificar instruções | Mudar ferramentas testadas |
+| **Hardware** | Otimizar configurações | Trocar equipamento |
+
+**Critérios de aprovação do piloto:**
+- ✓ Todas as 9 execuções (3 genomas × 3 ferramentas) completadas com sucesso
+- ✓ Dados coletados para todas as variáveis dependentes
+- ✓ Scripts funcionando sem erros críticos
+- ✓ Tempo total dentro de 150% do estimado
+- ✓ Aprovação formal do orientador
+
+---
+
+## 12. Plano de análise de dados (pré-execução)
+
+### 12.1 Estratégia geral de análise (como responderá às questões)
+
+#### Mapeamento Questões → Análises
+
+| Questão | Dados Necessários | Análise | Visualização |
+|---------|-------------------|---------|--------------|
+| **Q1.1** Diferença no tempo entre web/desktop | M1 (tempo total) | ANOVA + teste-t | Box plot |
+| **Q1.2** Impacto do tamanho no tempo | M1, M3 | ANOVA 2-way | Scatter plot |
+| **Q1.3** Consumo de recursos | M4, M5 | Estatísticas descritivas | Bar chart |
+| **Q2.1** Elementos genômicos identificados | M6, M7 | ANOVA | Bar chart agrupado |
+| **Q2.2** Concordância entre ferramentas | M8, M9 | Fleiss' Kappa | Heatmap |
+| **Q2.3** Completude da anotação | M10, M11 | ANOVA | Box plot |
+| **Q3.1** Esforço de instalação | M12, M13 | Descritiva | Tabela comparativa |
+| **Q3.2** Facilidade de integração | M14, M15 | Descritiva | Radar chart |
+| **Q4.1** Taxa de sucesso | M18, M19 | Teste qui-quadrado | Bar chart |
+| **Q4.2** Impacto da conectividade | M20, M21 | Teste-t | Line chart |
+
+**Fluxo de análise:**
+
+Dados Brutos → Limpeza → Análise Descritiva → Testes de Pressupostos → Análise Inferencial → Interpretação → Conclusões
+
+---
+
+### 12.2 Métodos estatísticos planejados
+
+#### Testes Estatísticos por Hipótese
+
+| Hipótese | Teste Principal | Teste Alternativo (se pressupostos violados) | Software |
+|----------|-----------------|---------------------------------------------|----------|
+| **H1 (Performance)** | ANOVA medidas repetidas | Friedman | R/Python |
+| **H2 (Qualidade)** | ANOVA one-way | Kruskal-Wallis | R/Python |
+| **H3 (Interação)** | ANOVA two-way | Aligned Rank Transform | R |
+| **H4 (Confiabilidade)** | Teste qui-quadrado | Teste exato de Fisher | R/Python |
+
+#### Verificação de Pressupostos
+
+| Pressuposto | Teste | Critério | Ação se Violado |
+|-------------|-------|----------|-----------------|
+| **Normalidade** | Shapiro-Wilk | p > 0,05 | Usar teste não-paramétrico |
+| **Homogeneidade de variâncias** | Levene | p > 0,05 | Usar Welch ANOVA |
+| **Esfericidade** | Mauchly | p > 0,05 | Usar correção Greenhouse-Geisser |
+| **Independência** | Design experimental | Garantido pelo design | - |
+
+#### Testes Post-Hoc
+
+| Situação | Teste Post-Hoc | Correção |
+|----------|----------------|----------|
+| ANOVA significativa (3 grupos) | Tukey HSD | Incluída no teste |
+| Múltiplas comparações | Bonferroni | α/k comparações |
+| Não-paramétrico | Dunn | Bonferroni |
+
+#### Tamanho do Efeito
+
+| Teste | Medida de Efeito | Interpretação |
+|-------|------------------|---------------|
+| ANOVA | η² (eta quadrado) | 0,01=pequeno, 0,06=médio, 0,14=grande |
+| Teste-t | d de Cohen | 0,2=pequeno, 0,5=médio, 0,8=grande |
+| Qui-quadrado | V de Cramér | 0,1=pequeno, 0,3=médio, 0,5=grande |
+
+---
+
+### 12.3 Tratamento de dados faltantes e outliers
+
+#### Regras para Dados Faltantes
+
+| Situação | Regra | Ação |
+|----------|-------|------|
+| Falha total de uma ferramenta para um genoma | Missing at Random | Excluir genoma da análise pareada |
+| Métrica específica não coletada | Missing Completely at Random | Imputação pela média do grupo |
+| Mais de 20% de dados faltantes em uma variável | Sistemático | Reportar separadamente |
+| Timeout em ferramenta web | Censurado | Registrar como tempo máximo + flag |
+
+#### Regras para Outliers
+
+| Método de Detecção | Critério | Ação |
+|--------------------|----------|------|
+| Z-score | \|z\| > 3 | Investigar causa |
+| IQR (Interquartile Range) | < Q1-1,5×IQR ou > Q3+1,5×IQR | Marcar para análise |
+| Inspeção visual | Box plot | Documentar |
+
+**Procedimento para outliers:**
+
+1. Identificar outlier
+2. Verificar se é erro de registro → Corrigir
+3. Verificar se é erro de execução → Repetir se possível
+4. Se valor legítimo → Manter e reportar
+5. Realizar análise com e sem outliers
+6. Reportar ambos os resultados se diferentes
+
+**Decisões pré-registradas:**
+- Outliers identificados NÃO serão automaticamente removidos
+- Análise de sensibilidade será realizada (com/sem outliers)
+- Todas as exclusões serão justificadas e documentadas
+- Dados brutos completos serão disponibilizados
+
+---
+
+### 12.4 Plano de análise para dados qualitativos (se houver)
+
+#### Dados Qualitativos Coletados
+
+| Dado | Fonte | Tipo |
+|------|-------|------|
+| Observações durante execução | Checklist pós-sessão | Texto livre |
+| Mensagens de erro | Logs das ferramentas | Texto estruturado |
+| Dificuldades encontradas | Diário do operador | Texto livre |
+| Características das anotações | Arquivos de saída | Categórico |
+
+#### Método de Análise: Análise de Conteúdo
+
+**Procedimento:**
+
+1. **Coleta:** Compilar todas as observações textuais
+2. **Leitura inicial:** Familiarização com o material
+3. **Codificação aberta:** Identificar temas emergentes
+4. **Categorização:** Agrupar códigos em categorias
+5. **Quantificação:** Contar frequência de categorias
+6. **Interpretação:** Relacionar com dados quantitativos
+
+**Categorias pré-definidas:**
+
+| Categoria | Códigos Esperados |
+|-----------|-------------------|
+| **Problemas técnicos** | Erro de conexão, timeout, falha de instalação |
+| **Usabilidade** | Interface confusa, documentação insuficiente |
+| **Performance** | Lentidão, travamento, uso excessivo de recursos |
+| **Qualidade** | Anotação incompleta, inconsistência |
+
+**Apresentação dos resultados:**
+- Tabela de frequência de categorias
+- Exemplos representativos de cada categoria
+- Triangulação com dados quantitativos
+
+---
+
+## Resumo dos Instrumentos e Variáveis por Fase
+
+| Fase | Instrumentos | Variáveis Coletadas | Métricas |
+|------|--------------|---------------------|----------|
+| **Preparação** | I10 (Git) | Metadados | - |
+| **Piloto** | I1-I10 | Todas (teste) | M1-M23 (validação) |
+| **Execução** | I1, I2, I3, I4, I5, I7 | VI, VD1-VD8 | M1-M7, M18-M19 |
+| **Pós-processamento** | I6, I8 | VD derivadas | M8-M11 |
+| **Análise** | R/Python | Todas | Todas |
